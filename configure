@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Ce script shell n'a rien d'un vrai script 'configure'
+# Il se contente de trouver un compilateur fortran dans le $PATH
+# de verifier si tous les header C sont presents.
+# et de générer le Makefile qui va bien
+
+# Le dossier avec tous les headers C
+INCLUDE_PATH=/usr/include
+
+# La fonction exist teste si le fichier existe
+exist ()
+{
+	printf "cheking for $1..."
+		test -e $INCLUDE_PATH/$1
+		case $? in
+		0) printf "yes\n";;
+	*) printf "no\nYou must install header file $1 (run apt-get install build-essential on Debian based OS)" && exit 1;;
+	esac
+}
+
+# On cherche si gfortran est bien installé...
+# (mon code ne compile qu'avec gfortran)
+printf "cheking for gfortran..."
+which gfortran >/dev/null 2>&1
+case $? in
+0) printf "yes\n" ; printf "export CF=`which gfortran`\nexport FLAGS=-W -Wall\n" > Makefile;;
+*) printf "no\n" ; printf "Warning : gfortran was not found ! exit... \n" && exit 1;;
+esac
+
+# On cherche gcc pour l'interface en C
+printf "cheking for gcc..."
+which gcc >/dev/null 2>&1
+case $? in
+0) printf "yes\n" ; printf "export CC=`which gcc`\nexport CFLAGS=-W -Wall -ansi -ggdb\n" >> Makefile;;
+*) printf "no\n" ; printf "Warning : gcc was not found ! exit...\n" && rm -f Makefile && exit 1;;
+esac
+
+
+# On cherche la librairie readline (optionelle)
+printf "#ifndef _INTERFACE_HEADER\n#define _INTERFACE_HEADER\n" > src/philab.h
+printf "cheking for readline..."
+test -e /usr/include/readline
+case $? in
+0) printf "yes\n"; printf "\n#define _USE_READLINE\n" >> src/philab.h; printf "export LDFLAGS=-lreadline\n" >> Makefile;;
+*) printf "no (Mais c'est pas grave ;-)\n";;
+esac
+
+
+exist stdio.h
+exist stdlib.h
+exist string.h
+exist sys/types.h
+exist sys/utsname.h
+exist unistd.h
+exist pwd.h
+exist sys/wait.h
+exist errno.h
+
+
+cat Makefile.in >> Makefile
+cat src/philab.h.in >> src/philab.h
+
+exit 0
