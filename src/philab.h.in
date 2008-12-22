@@ -46,7 +46,8 @@ typedef struct _builtin
    char *name; /* Le nom de la commande */
    char *description; /* Description */
    char *example; /* Un exemple d'utilisation */
-   void (*function)(char *); /* La fonction a appeler */
+   void (*f_one_param)(char *); /* La fonction a appeler */
+   void (*f_two_param)(char *, char *);
 } builtin;
 
 /* Les fonction représentées par les commande philab */

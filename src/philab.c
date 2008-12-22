@@ -18,14 +18,14 @@
 
 /* La liste des commandes de philab */
 const builtin builtin_cmd[] = {
-   {"help", "print help", "help [cmd]", help},
-   {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load},
-   {"unload", "unload a matrix", "unload A", unload},
-   {"print", "print a matrix", "print matrix_name, or simply matrix_name", print},
-   {"norm", "print the norm of a matrix", "norm [1|inf|fro] A", NULL},
-   {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL},
-   {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL},
-   {NULL, NULL, NULL, NULL}
+   {"help", "print help", "help [cmd]", help, NULL},
+   {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load, NULL},
+   {"unload", "unload a matrix", "unload A", unload, NULL},
+   {"print", "print a matrix", "print matrix_name, or simply matrix_name", print, NULL},
+   {"norm", "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
+   {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL, NULL},
+   {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL, NULL},
+   {NULL, NULL, NULL, NULL, NULL}
 };
 
 const char *autorised_cmd[10] = {"mkdir", "rm", "cp", "mv", "ls", "pwd", "vim", "emacs", "cat", NULL};
@@ -261,12 +261,20 @@ void make_cmd(char *str)
    while(p_builtin->name != NULL)
    {
       if(!strcmp(p_builtin->name, argv[0]))
-	 if(p_builtin->function != NULL)
+      {
+	 if(p_builtin->f_one_param != NULL)
 	 {
-	    p_builtin->function(argv[1]);
+	    p_builtin->f_one_param(argv[1]);
 	    FREE_ARGV();
 	    return;
 	 }
+	 else if(p_builtin->f_two_param != NULL)
+	 {
+	    p_builtin->f_two_param(argv[1], argv[2]);
+	    FREE_ARGV();
+	    return;
+	 }
+      }
       p_builtin++;
    }
    if(!strcmp(argv[0], "cd"))
