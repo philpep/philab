@@ -5,3 +5,5 @@ src/philab.h
 #*
 \#*
 .*.sw?
+philab
+runtime
