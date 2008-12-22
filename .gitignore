@@ -1,0 +1,7 @@
+*.o
+*.mod
+Makefile
+src/philab.h
+#*
+\#*
+.*.sw?
