@@ -47,9 +47,6 @@ void init_env(void)
    uname(&host);
    setenv("HOME", user->pw_dir, 0);
    setenv("HOST", host.nodename, 0);
-   setenv("PHILAB_PROD", PROD_CMD, 1);
-   setenv("PHILAB_SUM", SUM_CMD, 1);
-   setenv("PHILAB_PRINT", PRINT_CMD, 1);
    pwd = getpwd();
    p = malloc(sizeof(char) * (2+strlen(pwd)+strlen(RUNTIME)));
    strcpy(p, pwd);
@@ -434,7 +431,7 @@ void print(char *name)
    if(NULL == name)
       return help("print");
    cmd[0] = getenv("RUNTIME_PATH");
-   cmd[1] = getenv("PHILAB_PRINT");
+   cmd[1] = PRINT_CMD;
    while(p_mat != NULL)
    {
       if(!strcmp(p_mat->name, name))
@@ -460,9 +457,9 @@ void operateur(char *mat1, char *mat2, char *op)
       return help(op);
    cmd[0] = getenv("RUNTIME_PATH");
    if('+' == op[0])
-      cmd[1] = getenv("PHILAB_SUM");
+      cmd[1] = SUM_CMD;
    else
-      cmd[1] = getenv("PHILAB_PROD");
+      cmd[1] = PROD_CMD;
    while(p_mat != NULL)
    {
       if(!strcmp(p_mat->name, mat1))

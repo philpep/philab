@@ -98,7 +98,7 @@ case('prod')
    elseif (T(1) == 'I' .and. T(2) == 'C') then
       call mprint(C*B)
    elseif (T(1) == 'I' .and. T(2) == 'I') then
-      call mprint(C*D)
+      call mprint(matmul(C, D))
    else
       print*,'FATAL ERROR'
    end if
