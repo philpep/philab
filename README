@@ -1,2 +1,3 @@
-Les matrice creuse ne prennent pas en compte s'il y a des colonnes ou des lignes entièrement vides
-0 = stderr
+# Compilation et execution :
+
+./configure && make && ./philab
