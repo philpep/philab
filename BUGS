@@ -1,0 +1,4 @@
+ * load a.mat
+   load b.mat
+   load a.mat
+   load b.mat --> segfault
