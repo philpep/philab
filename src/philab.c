@@ -22,9 +22,7 @@ const builtin builtin_cmd[] = {
    {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load},
    {"unload", "unload a matrix", "unload A", unload},
    {"print", "print a matrix", "print matrix_name, or simply matrix_name", print},
-   {"norm1", "print the norm 1 of a matrix", "norm1 A", NULL},
-   {"norminf", "print the infinity norm of a matrix", "norminf A", NULL},
-   {"frobenius", "print the frobenius norm of a matrix", "frobenius A", NULL},
+   {"norm", "print the norm of a matrix", "norm [1|inf|fro] A", NULL},
    {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL},
    {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL},
    {NULL, NULL, NULL, NULL}
@@ -43,6 +41,12 @@ void init_env(void)
    /* TODO : si un seul setenv echoue
     * le programme est unitilisable */
    char *pwd, *p;
+   uid_t uid = getuid();
+   struct passwd *user = getpwuid(uid);
+   struct utsname host;
+   uname(&host);
+   setenv("HOME", user->pw_dir, 0);
+   setenv("HOST", host.nodename, 0);
    setenv("PHILAB_PROD", PROD_CMD, 1);
    setenv("PHILAB_SUM", SUM_CMD, 1);
    setenv("PHILAB_PRINT", PRINT_CMD, 1);
@@ -122,10 +126,9 @@ void builtin_cd(char *path)
 char *get_prompt(void)
 {
    /* Déclarations */
-   uid_t uid; /* l'uid du processus courant */
-   struct passwd *user; /* l'entrée utilisateur dans /etc/passwd cf man pwd.h */
-   struct utsname host; /* L'hostname de la machine */
-   char *pwd, *q, *prompt;
+   char *pwd, *q, *prompt, *home, *host;
+   home = getenv("HOME");
+   host = getenv("HOST");
    if(NULL == (pwd = getpwd()))
    {
       prompt = malloc(sizeof(char) * 2);
@@ -133,23 +136,20 @@ char *get_prompt(void)
       return prompt;
    }
    /* On va chercher les information dont on a besoin */
-   uname(&host);
-   uid = getuid(); 
-   user = getpwuid(uid);
    q = malloc(sizeof(char) * 1+strlen(pwd));
    /* Cette partie remplace $HOME par ~ dans dans et met
     * la nouvelle chaine obtenue dans q */
-   if(!strncmp(pwd, user->pw_dir, strlen(user->pw_dir)))
+   if(!strncmp(pwd, home, strlen(home)))
    {
       strcpy(q, "~");
-      strcat(q, pwd+strlen(user->pw_dir));
+      strcat(q, pwd+strlen(home));
    }
    else
       strcpy(q, pwd);
    /* On écrit le prompt */
-   prompt = malloc(sizeof(char) * 50+strlen(q)+strlen(host.nodename));
+   prompt = malloc(sizeof(char) * 50+strlen(q)+strlen(host));
    strcpy(prompt, "[\033[31mphilab\033[37m@\033[36m");
-   strcat(prompt, host.nodename);
+   strcat(prompt, host);
    strcat(prompt, "\033[37m : \033[34m");
    strcat(prompt, q);
    strcat(prompt, "\033[37m] % ");
@@ -486,3 +486,4 @@ void operateur(char *mat1, char *mat2, char *op)
    return;
 }
 /* }}} */
+
