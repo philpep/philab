@@ -93,16 +93,23 @@ integer, dimension(:,:), intent(in) :: B
 integer, dimension(maxval(A%ind_l), size(B,2)) :: prod_ei
 integer :: i,j
 prod_ei = 0
-! Pour chaque valeur non nulle de A
-! on rajoute le produit valeur*B(ind_c,j) au
-! vecteur prod_ei(ind_l,:)
-! Je ne suis pas sûr que ce soit le plus rapide
-! mais ça marche bien :)
-do i = 1,size(A)
-   do j = 1,size(B,2)
-      prod_ei(A(i)%ind_l,j) = prod_ei(A(i)%ind_l,j) + A(i)%val*B(A(i)%ind_c,j)
+! On peut supposer qu'une matrice creuse est de
+! dimensions infinie (une infinitée de 0), d'où la
+! condition > et non /=
+if (maxval(A%ind_c) > size(B,1)) then
+   write(0,*) 'Matrix must have good dimension'
+else
+   ! Pour chaque valeur non nulle de A
+   ! on rajoute le produit valeur*B(ind_c,j) au
+   ! vecteur prod_ei(ind_l,:)
+   ! Je ne suis pas sûr que ce soit le plus rapide
+   ! mais ça marche bien :)
+   do i = 1,size(A)
+      do j = 1,size(B,2)
+         prod_ei(A(i)%ind_l,j) = prod_ei(A(i)%ind_l,j) + A(i)%val*B(A(i)%ind_c,j)
+      end do
    end do
-end do
+end if
 end function prod_ei
 
 ! le produit n'est pas comutatif :-)
@@ -115,14 +122,14 @@ type(element), dimension(:), intent(in) :: A
 integer, dimension(size(B,1),maxval(A%ind_c)) :: prod_ie
 integer :: i,j
 prod_ie = 0
-if(size(B,2) /= maxval(A%ind_l)) then
+if(size(B,2) < maxval(A%ind_l)) then
    write(0,*) 'Matrix must have good dimension'
 else
-do i = 1,size(A)
-   do j = 1,size(B,1)
-      prod_ie(j,A(i)%ind_c) = prod_ie(j,A(i)%ind_c) + A(i)%val*B(j,A(i)%ind_l)
+   do i = 1,size(A)
+      do j = 1,size(B,1)
+         prod_ie(j,A(i)%ind_c) = prod_ie(j,A(i)%ind_c) + A(i)%val*B(j,A(i)%ind_l)
+      end do
    end do
-end do
 end if
 end function prod_ie
 
