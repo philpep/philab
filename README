@@ -1,3 +1,29 @@
-# Compilation et execution :
-
-./configure && make && ./philab
+#   ____  _     _ _       _     
+#  |  _ \| |__ (_) | __ _| |__  
+#  | |_) | '_ \| | |/ _` | '_ \ 
+#  |  __/| | | | | | (_| | |_) |
+#  |_|   |_| |_|_|_|\__,_|_.__/ 
+#                               
+#
+# Philab est un logiciel de calcul matriciel
+# minimaliste. Le moteur de calcul est codé en
+# fortran et l'interface en C. Toutes fois l'interface
+# est optionnelle et on peut executer toutes les
+# opérations directement avec le programme fortran.
+#
+#
+#
+#
+# Compilation :
+# Munisez vous d'un shell confortable (J'entend par
+# là que /bin/sh doit être un lien vers un shell
+# valable bash, dash ou zsh sont largement suffisants).
+# Et executez le script de configuration :
+# ./configure
+# Cette commande générera le Makefile qui va bien dans
+# le repertoire courant.
+# Ensuite compilez :
+# make
+# Et executez :
+# ./philab
+#
