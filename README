@@ -27,3 +27,18 @@
 # Et executez :
 # ./philab
 #
+#
+# Des matrices d'exemples sont dans examples/
+# Il y a un format de matrice a respecter :
+# Pour les matrices creuse :
+# 	- 1ère ligne : C
+# 	- 2ème ligne : nombre d'élléments non nuls
+# 	- Enuite renter les données sous la forme
+# 	  num_ligne num_colonne valeur,  par exemple '2 3 5'
+# 	  veut dire qu'il y a un 5 à la 2ème ligne 3ème colonne
+#
+# Pour les matrices entières :
+# 	- 1ère ligne : I (pour Integer)
+# 	- 2ème ligne : les dimensions de la matrices par exemple
+# 	  '2 3' veut dire une matrice a 2 lignes et 3 colonnes
+# 	- Ensuites les valeurs lignes par ligne. Exemple '1 2 3'
