@@ -11,12 +11,12 @@ INCLUDE_PATH=/usr/include
 # La fonction exist teste si le fichier existe
 exist ()
 {
-	printf "cheking for $1..."
-		test -e $INCLUDE_PATH/$1
-		case $? in
-		0) printf "yes\n";;
-	*) printf "no\nYou must install header file $1 (run apt-get install build-essential on Debian based OS)" && exit 1;;
-	esac
+   printf "cheking for $1..."
+   test -e ${INCLUDE_PATH}/${1}
+   case $? in
+      0) printf "yes\n";;
+      *) printf "no\nYou must install header file ${1} (run apt-get install build-essential on Debian based OS)" && exit 1;;
+   esac
 }
 
 # On cherche si gfortran est bien installé...
@@ -24,16 +24,16 @@ exist ()
 printf "cheking for gfortran..."
 which gfortran >/dev/null 2>&1
 case $? in
-0) printf "yes\n" ; printf "export CF=`which gfortran`\nexport FLAGS=-W -Wall\n" > Makefile;;
-*) printf "no\n" ; printf "Warning : gfortran was not found ! exit... \n" && exit 1;;
+   0) printf "yes\n" ; printf "export CF=`which gfortran`\nexport FLAGS=-W -Wall\n" > Makefile;;
+   *) printf "no\n" ; printf "Warning : gfortran was not found ! exit... \n" && exit 1;;
 esac
 
 # On cherche gcc pour l'interface en C
 printf "cheking for gcc..."
 which gcc >/dev/null 2>&1
 case $? in
-0) printf "yes\n" ; printf "export CC=`which gcc`\nexport CFLAGS=-W -Wall -ansi -ggdb\n" >> Makefile;;
-*) printf "no\n" ; printf "Warning : gcc was not found ! exit...\n" && rm -f Makefile && exit 1;;
+   0) printf "yes\n" ; printf "export CC=`which gcc`\nexport CFLAGS=-W -Wall -ansi -ggdb\n" >> Makefile;;
+   *) printf "no\n" ; printf "Warning : gcc was not found ! exit...\n" && rm -f Makefile && exit 1;;
 esac
 
 
@@ -42,8 +42,8 @@ printf "#ifndef _INTERFACE_HEADER\n#define _INTERFACE_HEADER\n" > src/philab.h
 printf "cheking for readline..."
 test -e /usr/include/readline
 case $? in
-0) printf "yes\n"; printf "\n#define _USE_READLINE\n" >> src/philab.h; printf "export LDFLAGS=-lreadline\n" >> Makefile;;
-*) printf "no (Mais c'est pas grave ;-)\n";;
+   0) printf "yes\n"; printf "\n#define _USE_READLINE\n" >> src/philab.h; printf "export LDFLAGS=-lreadline\n" >> Makefile;;
+   *) printf "no (Mais c'est pas grave ;-)\n";;
 esac
 
 
