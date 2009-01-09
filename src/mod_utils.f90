@@ -14,10 +14,6 @@ interface mprint
    module procedure mprinti, mprinte
 end interface mprint
 
-interface export
-   module procedure export_e, export_i
-end interface
-
 interface readmat
    module procedure readmat_i, readmat_e
 end interface
@@ -68,54 +64,6 @@ do i = 1,maxval(A%ind_l)
    print*,V
 end do
 end subroutine mprinte
-! }}}
-
-!   _____                       _   
-!  | ____|_  ___ __   ___  _ __| |_ 
-!  |  _| \ \/ / '_ \ / _ \| '__| __|
-!  | |___ >  <| |_) | (_) | |  | |_ 
-!  |_____/_/\_\ .__/ \___/|_|   \__|
-!             |_|                   
-!  
-! Ces fonctions servent à exporter des matrices
-! dans des fichiers. La convention est comme ceci :
-! Pour les matrices creuses
-! C  ! Indique que la matrice est creuse
-! 9  ! Nombre d'element
-! val ind_l ind_c ! Les valeurs de l'element 1
-! Pour les matrices normales
-! I ou R ! pour integer ou real
-! 2 3 ! taille ligne colonne
-! a_11 a_12 ....
-! a_21 a_22 ....
-! {{{ export
-subroutine export_e (A,fichier)
-implicit none
-type(element), dimension(:), intent(in) :: A
-character (len=10) :: fichier
-integer :: i
-open(unit=15, file=fichier)
-write(15, '(1A1)') 'C'
-write(15, *) size(A)
-do i = 1, size(A)
-   write(15, *) A(i)
-end do
-close(15)
-end subroutine export_e
-
-subroutine export_i (A,fichier)
-implicit none
-integer, dimension(:,:), intent(in) :: A
-character (len=10) :: fichier
-integer :: i
-open(unit=15, file=fichier)
-write(15, '(1A1)') 'I'
-write(15, *) size(A,1), size(A,2)
-do i = 1, size(A,1)
-   write(15,*) A(i,:)
-end do
-close(15)
-end subroutine export_i
 ! }}}
 
 !   ____                _                 _   
