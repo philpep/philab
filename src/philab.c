@@ -211,7 +211,7 @@ int main(void)
    printf("|_|   |_| |_|_|_|\\__,_|_.__/ \n");
    printf("Tapez 'help' pour l'aide \n");
    /* La boucle de philab */
-   while(1)
+   for(;;)
    {
       prompt = get_prompt();
       /* On recupère la saisie avec ou sans readline */
