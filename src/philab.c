@@ -8,6 +8,7 @@
 #include <sys/wait.h> /* wait */
 #include <sys/types.h> /* size_t, uid_t, pid_t */
 #include <sys/utsname.h> /* struct utsname, uname */
+#include <assert.h> /* macro assert() */
 
 #include "philab.h"
 
@@ -38,20 +39,20 @@ matrix *ll_matrix = NULL;
 /* {{{ init_env() */
 void init_env(void)
 {
-   /* TODO : si un seul setenv echoue
-    * le programme est unitilisable */
    char *pwd, *p;
    uid_t uid = getuid();
    struct passwd *user = getpwuid(uid);
    struct utsname host;
    uname(&host);
-   setenv("HOME", user->pw_dir, 0);
-   setenv("HOST", host.nodename, 0);
+   /* On utilise assert car si setenv
+    * echoue le programme est inutilisable */
+   assert(setenv("HOME", user->pw_dir, 0) == 0);
+   assert(setenv("HOST", host.nodename, 0) == 0);
    pwd = getpwd();
    p = malloc(sizeof(char) * (2+strlen(pwd)+strlen(RUNTIME)));
    strcpy(p, pwd);
    strcat(p, "/"RUNTIME);
-   setenv("RUNTIME_PATH", p, 1);
+   assert(setenv("RUNTIME_PATH", p, 1) == 0);
    free(p);
    free(pwd);
    return;
