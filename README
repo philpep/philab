@@ -26,6 +26,8 @@
 # make
 # Et executez :
 # ./philab
+# La commande help permet d'avoir un rapide descriptif
+# de ce qu'il est possible de faire avec philab.
 #
 #
 # Des matrices d'exemples sont dans examples/
