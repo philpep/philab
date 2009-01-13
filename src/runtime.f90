@@ -153,13 +153,13 @@ case('somme')
    end if
 case('gauss')
    if(T(1) == 'C' .and. T(2) == 'C') then
-      call mprint(A+B)
+      call mprint(gauss(mat2mat(A),mat2mat(B)))
    elseif (T(1) == 'C' .and. T(2) == 'I') then
-      call mprint(A+D)
+      call mprint(gauss(mat2mat(A),D))
    elseif (T(1) == 'I' .and. T(2) == 'C') then
-      call mprint(B+C)
+      call mprint(gauss(C,mat2mat(B)))
    elseif (T(1) == 'I' .and. T(2) == 'I') then
-      call mprint(gaussi(C,D))
+      call mprint(gauss(C,D))
    else ! On est jamais trop prudent :)
       print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
