@@ -12,9 +12,15 @@ runtime: ../runtime
 	$(CF) -o $@ -c $< $(FLAGS)
 
 mod_mat_creuse.o: mod_mat_creuse.f90
+
 mod_normes.o: mod_normes.f90 mod_mat_creuse.o
+
 mod_utils.o: mod_utils.f90 mod_mat_creuse.o
+
 mod_gauss.o: mod_gauss.f90 mod_mat_creuse.o mod_utils.o
+
+mod_pw_iter.o: mod_pw_iter.f90 mod_mat_creuse.o
+
 runtime.o: runtime.f90 mod_mat_creuse.o mod_normes.o mod_gauss.o mod_utils.o
 
 philab: ../philab

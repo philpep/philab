@@ -10,6 +10,7 @@ use mod_mat_creuse
 use mod_normes
 use mod_utils
 use mod_gauss
+use mod_pw_iter
 
 implicit none
 
@@ -160,6 +161,18 @@ case('gauss')
       call mprint(gauss(C,mat2mat(B)))
    elseif (T(1) == 'I' .and. T(2) == 'I') then
       call mprint(gauss(C,D))
+   else ! On est jamais trop prudent :)
+      print*,'Il y a eu une erreur lors de la lecture de la matrice...'
+   end if
+case('pw_iter')
+   if(T(1) == 'C' .and. T(2) == 'C') then
+      call mprint(A)
+   elseif (T(1) == 'C' .and. T(2) == 'I') then
+      call mprint(A)
+   elseif (T(1) == 'I' .and. T(2) == 'C') then
+      call mprint(A)
+   elseif (T(1) == 'I' .and. T(2) == 'I') then
+      print*,norme_inf(pw_iter(C,D,10000))
    else ! On est jamais trop prudent :)
       print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
