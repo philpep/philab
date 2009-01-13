@@ -1,4 +1,4 @@
-program main
+program runtime
 use mod_mat_creuse
 use mod_normes
 use mod_utils
@@ -125,4 +125,4 @@ if(allocated(D)) then
    deallocate(D)
 end if
 
-end program main
+end program runtime
