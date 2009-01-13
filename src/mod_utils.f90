@@ -11,7 +11,7 @@ use mod_mat_creuse
 implicit none
 
 interface mprint
-   module procedure mprinti, mprinte
+   module procedure mprinti, mprinte, mprintr
 end interface mprint
 
 interface readmat
@@ -39,6 +39,15 @@ do i = 1, size(A,1)
    print*,A(i,:)
 end do
 end subroutine mprinti
+
+subroutine mprintr (A)
+implicit none
+real, dimension(:,:), intent(in) :: A
+integer :: i
+do i = 1, size(A,1)
+   print*,A(i,:)
+end do
+end subroutine mprintr
 
 ! La fonction d'affichage pour les matrices
 ! creuses de type real

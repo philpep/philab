@@ -9,6 +9,7 @@ program runtime
 use mod_mat_creuse
 use mod_normes
 use mod_utils
+use mod_gauss
 
 implicit none
 
@@ -48,7 +49,7 @@ case(0,1)
    print*,'Liser le fichier README pour comprendre comment utiliser ce programme'
    stop
 case (2)
-   if(argv(1) == 'produit' .or. argv(1) == 'somme') then
+   if(argv(1) == 'produit' .or. argv(1) == 'somme' .or. argv(1) == 'gauss') then
       write(0,*) 'Pour utiliser',argv(1),', il faut deux opérandes'
       stop
    end if
@@ -147,6 +148,18 @@ case('somme')
       call mprint(B+C)
    elseif (T(1) == 'I' .and. T(2) == 'I') then
       call mprint(C+D)
+   else ! On est jamais trop prudent :)
+      print*,'Il y a eu une erreur lors de la lecture de la matrice...'
+   end if
+case('gauss')
+   if(T(1) == 'C' .and. T(2) == 'C') then
+      call mprint(A+B)
+   elseif (T(1) == 'C' .and. T(2) == 'I') then
+      call mprint(A+D)
+   elseif (T(1) == 'I' .and. T(2) == 'C') then
+      call mprint(B+C)
+   elseif (T(1) == 'I' .and. T(2) == 'I') then
+      call mprint(gaussi(C,D))
    else ! On est jamais trop prudent :)
       print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
