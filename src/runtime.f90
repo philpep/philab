@@ -1,26 +1,55 @@
 program runtime
+! Programme principal.
+! Il ne fait qu'analyser la ligne de commande
+! lire les bonnes matrices puis executer
+! la bonne fonction.
+
+
+! Les modules qu'on va utiliser.
 use mod_mat_creuse
 use mod_normes
 use mod_utils
+
 implicit none
+
+! Déclaration des variables
+
+! Les arguments de la ligne de commande
 character (len=256), dimension(3) :: argv
+! Les fichiers d'entrée.
 character (len=256), dimension(2) :: infile
+! Type des fichiers d'entrée.
 character, dimension(2) :: T
+! Les matrices creuses
 type(element), dimension(:), allocatable :: A,B
+! Les matrices entières
 integer, dimension(:,:), allocatable :: C,D
+! En fait le programme sait executer des fonctions
+! sur deux matrices au maximum, donc avec le "jeux" de
+! matrices A,B,C,D on peut tout faire.
 integer :: i
 
+
+! On récupère les arguments de la ligne
+! de commande. La subroutine getarg et la
+! fonction iargc (qui renvoie le nombre d'arguments
+! passées au programme) sont des
+! extension GNU intégrée dans gfortran.
+! Ce n'est pas très portable, mais c'est la
+! seule manière que je connais.
 do i = 1,min(iargc(),3)
    call getarg(i, argv(i))
 end do
 
+! On analyse la commande suivant le nombre
+! d'arguments passés a la ligne de commande.
 select case (iargc())
 case(0,1)
-   print*,'USAGE : todo'
+   print*,'Liser le fichier README pour comprendre comment utiliser ce programme'
    stop
 case (2)
-   if(argv(1) == 'prod' .or. argv(1) == 'sum') then
-      write(0,*) 'We need 2 operands for',argv(1)
+   if(argv(1) == 'produit' .or. argv(1) == 'somme') then
+      write(0,*) 'Pour utiliser',argv(1),', il faut deux opérandes'
       stop
    end if
    infile(1) = argv(2)
@@ -29,19 +58,32 @@ case default
    infile(2) = argv(3)
 end select
 
+
+! On ouvre le premier fichier. status='OLD'
+! permet de générer une érreur si le fichier
+! n'existe pas.
 open(unit=15, status='OLD', file=infile(1))
+! On lis le type de la première matrice.
 read(15,*) T(1)
+! On ferme le fichier
 close(15)
+
+! On alloue la matrice suivant le type
 if(T(1) == 'C') then
    call readmat(A,infile(1))
    elseif (T(1) == 'I') then
    call readmat(C,infile(1))
 else
-   write(0,*) 'Format error :: ', infile(1)
+   write(0,*) 'Format de fichier non valide : ', infile(1)
    stop
 end if
 
+! On lis la deuxième matrice (sauf si
+! la commande ne nécessite qu'une seule matrice,
+! calcul de normes par exemple).
+
 if (iargc() > 2) then
+   ! La methode est la même...
    open(unit=15, status='OLD', file=infile(2))
    read(15,*) T(2)
    close(15)
@@ -50,13 +92,15 @@ if (iargc() > 2) then
       elseif (T(2) == 'I') then
       call readmat(D,infile(2))
    else
-      write(0,*) 'Format error :: ', infile(2)
+      write(0,*) 'Format de fichier non valide : ', infile(2)
       stop
    end if
 end if
 
 
 
+! argv(1) est la commande que l'on veut
+! executer.
 select case (argv(1))
 case('norme1')
    if(T(1) == 'C') then
@@ -82,7 +126,7 @@ case('print')
    else
       call mprint(C)
    end if
-case('prod')
+case('produit')
    if(T(1) == 'C' .and. T(2) == 'C') then
       call mprint(A*B)
    elseif (T(1) == 'C' .and. T(2) == 'I') then
@@ -91,10 +135,10 @@ case('prod')
       call mprint(C*B)
    elseif (T(1) == 'I' .and. T(2) == 'I') then
       call mprint(matmul(C, D))
-   else
-      print*,'FATAL ERROR'
+   else ! On est jamais trop prudent :)
+      print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
-case('sum')
+case('somme')
    if(T(1) == 'C' .and. T(2) == 'C') then
       call mprint(A+B)
    elseif (T(1) == 'C' .and. T(2) == 'I') then
@@ -103,11 +147,11 @@ case('sum')
       call mprint(B+C)
    elseif (T(1) == 'I' .and. T(2) == 'I') then
       call mprint(C+D)
-   else
-      print*,'FATAL ERROR'
+   else ! On est jamais trop prudent :)
+      print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
 case default
-   print*,'foo bar'
+   print*,'Commande inconnue : ', argv(1)
 end select
 
 
