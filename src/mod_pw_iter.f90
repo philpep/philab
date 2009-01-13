@@ -5,12 +5,11 @@ implicit none
 
 contains
 
-function pw_iter(A,u,n)
+function pw_iter(A,u)
 integer, dimension(:,:), intent(in) :: A
 integer, dimension(:,:), intent(in) :: u
-integer, intent(in) :: n
 integer, dimension(size(A,1),size(u,2)) :: pw_iter
-integer :: i
+integer :: i, n = 10000
 
 if(size(u,2) /= 1 .or. size(A,1) /= size(A,2)) then
    write(0,*) 'Error'

@@ -166,13 +166,13 @@ case('gauss')
    end if
 case('pw_iter')
    if(T(1) == 'C' .and. T(2) == 'C') then
-      call mprint(A)
+      print*,norme_inf(pw_iter(mat2mat(A),mat2mat(B)))
    elseif (T(1) == 'C' .and. T(2) == 'I') then
-      call mprint(A)
+      print*,norme_inf(pw_iter(mat2mat(A),D))
    elseif (T(1) == 'I' .and. T(2) == 'C') then
-      call mprint(A)
+      print*,norme_inf(pw_iter(C,mat2mat(B)))
    elseif (T(1) == 'I' .and. T(2) == 'I') then
-      print*,norme_inf(pw_iter(C,D,10000))
+      print*,norme_inf(pw_iter(C,D))
    else ! On est jamais trop prudent :)
       print*,'Il y a eu une erreur lors de la lecture de la matrice...'
    end if
@@ -182,6 +182,7 @@ end select
 
 
 ! On libère la memoire
+! si on pouvait avoir une telle fonction en C :-)
 if(allocated(A)) then
    deallocate(A)
 end if
