@@ -114,7 +114,7 @@ case('normeinf')
    else
       print*,norme_inf(C)
    end if
-case('frobenius')
+case('normefro')
    if(T(1) == 'C') then
       print*,frobenius(A)
    else
