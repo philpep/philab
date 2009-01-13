@@ -2,14 +2,13 @@ SRC_DIR=src
 all:
 	@(cd $(SRC_DIR) && $(MAKE) $@)
 
-.PHONY: clean mrproper pkg
-
 clean:
 	@(cd $(SRC_DIR) && $(MAKE) $@)
 
 mrproper:
 	@(cd $(SRC_DIR) && $(MAKE) $@)
 
+# Cette cible permet de générer une archive tarball compréssée
 pkg: mrproper
 	rm -f Makefile
 	tar cvzf ../philab-`date +%d%m%y`.tar.gz ../philab

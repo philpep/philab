@@ -103,6 +103,8 @@ end if
 
 ! argv(1) est la commande que l'on veut
 ! executer.
+! On teste sur la commande et sur les types de
+! matrices.
 select case (argv(1))
 case('norme1')
    if(T(1) == 'C') then
