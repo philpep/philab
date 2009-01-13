@@ -1,15 +1,11 @@
-!   _   _  ___  ____  __  __ _____ ____  
-!  | \ | |/ _ \|  _ \|  \/  | ____/ ___| 
-!  |  \| | | | | |_) | |\/| |  _| \___ \ 
-!  | |\  | |_| |  _ <| |  | | |___ ___) |
-!  |_| \_|\___/|_| \_\_|  |_|_____|____/ 
+module mod_normes
 ! Ce module contient les fonctions
 ! de calculs de normes
 ! - Norme 1
 ! - Norme infinie
 ! - Norme de Frobenius
-module mod_normes
 use mod_mat_creuse
+
 implicit none
 
 ! Interfaces génériques pour les
@@ -28,19 +24,15 @@ interface frobenius
 end interface frobenius
 
 contains
-!  
-!   _   _                             _ 
-!  | \ | | ___  _ __ _ __ ___   ___  / |
-!  |  \| |/ _ \| '__| '_ ` _ \ / _ \ | |
-!  | |\  | (_) | |  | | | | | |  __/ | |
-!  |_| \_|\___/|_|  |_| |_| |_|\___| |_|
-! {{{ norme_1                                      
+! {{{ norme 1
 ! Cette fonction calcule la norme 1
 ! d'un tableau de type 'real'
 ! La norme 1 est le maximum des sommes
 ! sur les colonnes (en valeur absolue)
 function norme_1_i (A)
+
 implicit none
+
 ! Déclaration de la variable d'entrée
 integer, dimension(:,:), intent(in) :: A
 ! Déclaration de la variable de sortie
