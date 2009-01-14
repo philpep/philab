@@ -22,8 +22,8 @@ const builtin builtin_cmd[] = {
    {"help", "print help", "help [cmd]", help, NULL},
    {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load, NULL},
    {"unload", "unload a matrix", "unload A", unload, NULL},
-   {"print", "print a matrix", "print matrix_name, or simply matrix_name", print, NULL},
-   {"norme", "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
+   {PRINT, "print a matrix", "print matrix_name, or simply matrix_name", print, NULL},
+   {NORME, "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
    {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL, NULL},
    {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL}
@@ -465,12 +465,19 @@ void load(char *path)
    return;
 }
 
-/* {{{ unload() */
+/* Permet de décharger une matrice de la memoire */
 void unload(char *name)
 {
-   matrix *mat = ll_matrix, *prev = ll_matrix;
+   matrix *mat, *prev;
+
    if(name == NULL)
       return help("unload");
+
+   mat = ll_matrix;
+   prev = ll_matrix;
+
+   /* Code classique pour la suppression d'un element dans
+    * une liste simplement chainée */
    while(mat != NULL)
    {
       if(!strcmp(mat->name, name))
@@ -491,23 +498,23 @@ void unload(char *name)
    fprintf(stderr,"Philab: %s is not a loaded matrix\n", name);
    return;
 }
-/* }}} */
 
-/* {{{ print() */
+/*
+ * Affiche une matrice
+ */
 void print(char *name)
 {
-   char *cmd[4];
+   char *cmd[4] = {getenv("RUNTIME_PATH"), PRINT, NULL, NULL};
    matrix *p_mat = ll_matrix;
+
    if(NULL == name)
-      return help("print");
-   cmd[0] = getenv("RUNTIME_PATH");
-   cmd[1] = PRINT_CMD;
+      return help(PRINT);
+
    while(p_mat != NULL)
    {
       if(!strcmp(p_mat->name, name))
       {
 	 cmd[2] = p_mat->file;
-	 cmd[3] = NULL;
 	 printf("%s = \n", p_mat->name);
 	 return external_cmd(cmd);
       }
@@ -516,41 +523,49 @@ void print(char *name)
    fprintf(stderr, "Philab: %s n'est pas un nom de matrice ni une commande valide\n", name);
    return;
 }
-/* }}} */
 
-/* {{{ operateur() */
+/* calcul d'une operation + ou * */
 void operateur(char *mat1, char *mat2, char *op)
 {
-   char *cmd[5] = {NULL, NULL, NULL, NULL, NULL};
+   char *cmd[5] = {getenv("RUNTIME_PATH"), NULL, NULL, NULL, NULL};
    matrix *p_mat = ll_matrix;
+
    if(NULL == mat1 || NULL == mat2)
       return help(op);
-   cmd[0] = getenv("RUNTIME_PATH");
+
    if('+' == op[0])
-      cmd[1] = SUM_CMD;
+      cmd[1] = SUM;
    else
-      cmd[1] = PROD_CMD;
+      cmd[1] = PROD;
+
    while(p_mat != NULL)
    {
+
       if(!strcmp(p_mat->name, mat1))
 	 cmd[2] = p_mat->file;
+
       if(!strcmp(p_mat->name, mat2))
 	 cmd[3] = p_mat->file;
+
+      if(cmd[2] != NULL && cmd[3] != NULL)
+	 break;
       p_mat = p_mat->next;
    }
+
    if(cmd[2] == NULL)
    {
       fprintf(stderr, "Philab: la matrice '%s' n'existe pas\n", mat1);
       return;
    }
+
    if(cmd[3] == NULL)
    {
       fprintf(stderr, "Philab: la matrice '%s' n'existe pas\n", mat2);
       return;
    }
+
    printf("%s %s %s = \n", mat1, op, mat2);
    external_cmd(cmd);
    return;
 }
-/* }}} */
 

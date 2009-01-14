@@ -28,11 +28,13 @@ void make_cmd(char *str);
 #define MAX_ARG 10
 
 /* Quelques constantes */
-#define RUNTIME "runtime" /* Le nom de l'executable fortran */
-#define PRINT_CMD "print" /* Le nom de la commande print */
-#define PROD_CMD "prod" /* Le nom de la commande pour le produit */
-#define SUM_CMD "sum" /* Le nom de la commande pour la sommme */
-#define EXTENSION ".mat" /* L'extension des fichiers de matrices */
+#define RUNTIME "runtime"
+#define PRINT "print"
+#define PROD "produit"
+#define SUM "somme"
+#define GAUSS "gauss"
+#define NORME "norme"
+#define EXTENSION ".mat"
 
 
 /* Structure d'une matrice chargée */
