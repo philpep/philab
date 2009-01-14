@@ -11,6 +11,50 @@
 # est optionnelle et on peut executer toutes les
 # opérations directement avec le programme fortran.
 #
+# J'ai codé philab en utilisant le gestionnaire de
+# version git. Pour voir les différentes étapes du
+# code, il y a un gitweb ici : http://git.philpep.ath.cx/philab.git
+# Pour recuperer la dernière version de philab :
+# git clone git://philpep.ath.cx/philab.git
+#
+# Attention, le serveur est hébergé (pour le moment) sur mon petit
+# portable qui n'est pas allumé 24h/24 :-) , donc il
+# est possible que philpep.ath.cx soit parfois down.
+#
+# Contact : Philippe Pepiot <philux@tuxfamily.org>
+# 			    <philippe.pepiot@gmail.com>
+# 			    <mapi13@cict.fr>
+# (Je n'ai pas encore installé mon serveur de mail :-)
+#
+# Toute partie du code peut être librement modifiée et
+# redistribuée suivant les termes de la licence BSD que voici :
+#
+
+# Copyright (c) 1998, Regents of the University of California
+# All rights reserved.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of the University of California, Berkeley nor the
+#       names of its contributors may be used to endorse or promote products
+#       derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #
 #
 #
