@@ -54,15 +54,15 @@ typedef struct _builtin
    char *name; /* Le nom de la commande */
    char *description; /* Description */
    char *example; /* Un exemple d'utilisation */
-   void (*f)(char *); /* La fonction a appeler */
-   void (*f2)(char *, char *);
+   void (*f)(char *); /* La fonction a appeler (un param) */
+   void (*f2)(char *, char *); /* autre fonction avec 2 param */
 } builtin;
 
 /* Les fonction représentées par les commande philab */
 void help(char *p); /* Affiche l'aide */
 void load(char *path); /* Charge une matrice */
 void unload(char *name); /* Décharge une matrice */
-void print(char *name); /* Affiche une matrice */
+void two_param(char *func, char *mat);
 
 void operateur(char *mat1, char *mat2, char *op);
 

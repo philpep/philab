@@ -22,11 +22,11 @@ const builtin builtin_cmd[] = {
    {"help", "Affiche l'aide", "help [cmd]", help, NULL},
    {"load", "Charge une matrice dans la memoire", "load a.mat ('a' sera un alias vers la matrice a.mat)", load, NULL},
    {"unload", "Décharge une matrice", "unload A", unload, NULL},
-   {PRINT, "Affiche une matrice", PRINT" matrix_alias, ou plus simplement matrix_alias", print, NULL},
-   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL},
-   {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, NULL},
+   {PRINT, "Affiche une matrice", PRINT" matrix_alias, ou plus simplement matrix_alias", NULL, two_param},
+   {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, two_param},
    {"+", "Affiche la somme de deux matrices", "A + B (Avec les espaces svp)", NULL, NULL},
    {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL},
+   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL},
    {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL},
    {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL}
@@ -304,13 +304,21 @@ void make_cmd(char *str)
    if(argv[0] == NULL)
       return;
 
+   /* On teste les commandes philab */
    while(p_builtin->name != NULL)
    {
       if(!strcmp(p_builtin->name, argv[0]))
       {
+	 /* On execute f ou f2 */
 	 if(p_builtin->f != NULL)
 	 {
 	    p_builtin->f(argv[1]);
+	    FREE_ARGV();
+	    return;
+	 }
+	 else if(p_builtin->f2 != NULL)
+	 {
+	    p_builtin->f2(argv[0], argv[1]);
 	    FREE_ARGV();
 	    return;
 	 }
@@ -326,6 +334,7 @@ void make_cmd(char *str)
       return;
    }
 
+   /* On teste sur les commandes shell autorisées */
    i = 0;
    p = autorised_cmd[0];
    while(p != NULL)
@@ -338,17 +347,20 @@ void make_cmd(char *str)
       }
       p = autorised_cmd[++i];
    }
+
+   /* Si on veut effectuer la somme ou le produit de deux matrices */
    if(argv[1] != NULL && (!strcmp(argv[1], "+")||!strcmp(argv[1], "*")))
    {
       operateur(argv[0], argv[2], argv[1]);
       FREE_ARGV();
       return;
    }
-   print(argv[0]);
+   
+   /* Sinon on essaye d'afficher la matrice argv[0] */
+   two_param(PRINT, argv[0]);
    FREE_ARGV();
    return;
 }
-/* }}} */
 
 /* Affiche l'aide en couleurs avec des belles intentations */
 void help(char *p)
@@ -465,7 +477,7 @@ void load(char *path)
    new->next = ll_matrix;
    ll_matrix = new;
    /* On affiche la matrice chargée */
-   print(ll_matrix->name);
+   two_param(PRINT, ll_matrix->name);
    return;
 }
 
@@ -503,30 +515,6 @@ void unload(char *name)
    return;
 }
 
-/*
- * Affiche une matrice
- */
-void print(char *name)
-{
-   char *cmd[4] = {getenv("RUNTIME_PATH"), PRINT, NULL, NULL};
-   matrix *p_mat = ll_matrix;
-
-   if(NULL == name)
-      return help(PRINT);
-
-   while(p_mat != NULL)
-   {
-      if(!strcmp(p_mat->name, name))
-      {
-	 cmd[2] = p_mat->file;
-	 printf("%s = \n", p_mat->name);
-	 return external_cmd(cmd);
-      }
-      p_mat = p_mat->next;
-   }
-   fprintf(stderr, "Philab: %s n'est pas un nom de matrice ni une commande valide\n", name);
-   return;
-}
 
 /* calcul d'une operation + ou * */
 void operateur(char *mat1, char *mat2, char *op)
@@ -570,6 +558,28 @@ void operateur(char *mat1, char *mat2, char *op)
 
    printf("%s %s %s = \n", mat1, op, mat2);
    external_cmd(cmd);
+   return;
+}
+
+/* La fonction d'execution à deux paramêtres */
+void two_param(char *func, char *mat)
+{
+   char *cmd[5] = {getenv("RUNTIME_PATH"), func, NULL, NULL};
+   matrix *p_mat = ll_matrix;
+
+   if(NULL == mat)
+      return help(func);
+
+   while(p_mat != NULL)
+   {
+      if(!strcmp(p_mat->name, mat))
+      {
+	 cmd[2] = p_mat->file;
+	 return external_cmd(cmd);
+      }
+      p_mat = p_mat->next;
+   }
+   fprintf(stderr, "Philab: %s n'est pas un nom de matrice chargée, voyez help load\n", mat);
    return;
 }
 
