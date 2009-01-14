@@ -2,3 +2,5 @@
    load b.mat
    load a.mat
    load b.mat --> segfault
+
+Je pense que l'appel de la fonction unload() dans la fonction load() y est pour quelque chose, le pointeur de la structure est changé...

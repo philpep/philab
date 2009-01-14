@@ -15,17 +15,20 @@
 #
 #
 # Compilation :
-# Munisez vous d'un shell confortable (J'entend par
+# Munissez vous d'un shell confortable (J'entend par
 # là que /bin/sh doit être un lien vers un shell
 # valable bash, dash ou zsh sont largement suffisants).
 # Et executez le script de configuration :
 # ./configure
+#
 # Cette commande générera le Makefile qui va bien dans
 # le repertoire courant.
 # Ensuite compilez :
 # make
+#
 # Et executez :
 # ./philab
+#
 # La commande help permet d'avoir un rapide descriptif
 # de ce qu'il est possible de faire avec philab.
 #
@@ -44,3 +47,8 @@
 # 	- 2ème ligne : les dimensions de la matrices par exemple
 # 	  '2 3' veut dire une matrice a 2 lignes et 3 colonnes
 # 	- Ensuites les valeurs lignes par ligne. Exemple '1 2 3'
+#
+#
+#
+# Pour utiliser le programme sans l'interface il faut le lancer comme ceci :
+# ./runtime fonction fichier_matrices
