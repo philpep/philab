@@ -56,6 +56,7 @@ typedef struct _builtin
    char *example; /* Un exemple d'utilisation */
    void (*f)(char *); /* La fonction a appeler (un param) */
    void (*f2)(char *, char *); /* autre fonction avec 2 param */
+   void (*f3)(char *, char *, char *);  /* 3 param */
 } builtin;
 
 /* Les fonction représentées par les commande philab */

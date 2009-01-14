@@ -19,17 +19,17 @@
 
 /* La liste des commandes de philab */
 const builtin builtin_cmd[] = {
-   {"help", "Affiche l'aide", "help [cmd]", help, NULL},
-   {"load", "Charge une matrice dans la memoire", "load a.mat ('a' sera un alias vers la matrice a.mat)", load, NULL},
-   {"unload", "Décharge une matrice", "unload A", unload, NULL},
-   {PRINT, "Affiche une matrice", PRINT" matrix_alias, ou plus simplement matrix_alias", NULL, two_param},
-   {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, two_param},
-   {"+", "Affiche la somme de deux matrices", "A + B (Avec les espaces svp)", NULL, NULL},
-   {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL},
-   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL},
-   {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL},
-   {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL},
-   {NULL, NULL, NULL, NULL, NULL}
+   {"help", "Affiche l'aide", "help [cmd]", help, NULL, NULL},
+   {"load", "Charge une matrice dans la memoire", "load a.mat ('a' sera un alias vers la matrice a.mat)", load, NULL, NULL},
+   {"unload", "Décharge une matrice", "unload A", unload, NULL, NULL},
+   {PRINT, "Affiche une matrice", PRINT" matrix_alias, ou plus simplement matrix_alias", NULL, two_param, NULL},
+   {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, two_param, NULL},
+   {"+", "Affiche la somme de deux matrices", "A + B (Avec les espaces svp)", NULL, NULL, NULL},
+   {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL, NULL},
+   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL, NULL},
+   {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL, tree_param},
+   {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL, tree_param},
+   {NULL, NULL, NULL, NULL, NULL, NULL}
 };
 
 const char *autorised_cmd[10] = {"mkdir", "rm", "cp", "mv", "ls", "pwd", "vim", "emacs", "cat", NULL};
@@ -311,17 +311,15 @@ void make_cmd(char *str)
       {
 	 /* On execute f ou f2 */
 	 if(p_builtin->f != NULL)
-	 {
 	    p_builtin->f(argv[1]);
-	    FREE_ARGV();
-	    return;
-	 }
 	 else if(p_builtin->f2 != NULL)
-	 {
 	    p_builtin->f2(argv[0], argv[1]);
-	    FREE_ARGV();
-	    return;
-	 }
+	 else if(p_builtin->f3 != NULL)
+	    p_builtin->f3(argv[0], argv[1], argv[2]);
+	 else
+	    break;
+	 FREE_ARGV();
+	 return;
       }
       p_builtin++;
    }
