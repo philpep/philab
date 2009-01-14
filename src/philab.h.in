@@ -63,6 +63,7 @@ void help(char *p); /* Affiche l'aide */
 void load(char *path); /* Charge une matrice */
 void unload(char *name); /* Décharge une matrice */
 void two_param(char *func, char *mat);
+void tree_param(char *func, char *mat1, char *mat2);
 
 void operateur(char *mat1, char *mat2, char *op);
 

@@ -355,7 +355,7 @@ void make_cmd(char *str)
       FREE_ARGV();
       return;
    }
-   
+
    /* Sinon on essaye d'afficher la matrice argv[0] */
    two_param(PRINT, argv[0]);
    FREE_ARGV();
@@ -519,45 +519,12 @@ void unload(char *name)
 /* calcul d'une operation + ou * */
 void operateur(char *mat1, char *mat2, char *op)
 {
-   char *cmd[5] = {getenv("RUNTIME_PATH"), NULL, NULL, NULL, NULL};
-   matrix *p_mat = ll_matrix;
-
-   if(NULL == mat1 || NULL == mat2)
-      return help(op);
-
-   if('+' == op[0])
-      cmd[1] = SUM;
+   if(!strcmp(op, "+"))
+      return tree_param(SUM, mat1, mat2);
+   else if(!strcmp(op, "*"))
+      return tree_param(PROD, mat1, mat2);
    else
-      cmd[1] = PROD;
-
-   while(p_mat != NULL)
-   {
-
-      if(!strcmp(p_mat->name, mat1))
-	 cmd[2] = p_mat->file;
-
-      if(!strcmp(p_mat->name, mat2))
-	 cmd[3] = p_mat->file;
-
-      if(cmd[2] != NULL && cmd[3] != NULL)
-	 break;
-      p_mat = p_mat->next;
-   }
-
-   if(cmd[2] == NULL)
-   {
-      fprintf(stderr, "Philab: la matrice '%s' n'existe pas\n", mat1);
-      return;
-   }
-
-   if(cmd[3] == NULL)
-   {
-      fprintf(stderr, "Philab: la matrice '%s' n'existe pas\n", mat2);
-      return;
-   }
-
-   printf("%s %s %s = \n", mat1, op, mat2);
-   external_cmd(cmd);
+      fprintf(stderr,"Philab: Il y a eu une érreur\n");
    return;
 }
 
@@ -570,6 +537,7 @@ void two_param(char *func, char *mat)
    if(NULL == mat)
       return help(func);
 
+   /* On cherche la matrice */
    while(p_mat != NULL)
    {
       if(!strcmp(p_mat->name, mat))
@@ -580,6 +548,33 @@ void two_param(char *func, char *mat)
       p_mat = p_mat->next;
    }
    fprintf(stderr, "Philab: %s n'est pas un nom de matrice chargée, voyez help load\n", mat);
+   return;
+}
+
+
+/* La fonction d'execution à trois paramêtres */
+void tree_param(char *func, char *mat1, char *mat2)
+{
+   char *cmd[6] = {getenv("RUNTIME_PATH"), func, NULL, NULL, NULL};
+   matrix *p_mat = ll_matrix;
+
+   if(NULL == mat1 || NULL == mat2)
+      return help(func);
+
+   /* On cherche les matrices */
+   while(p_mat != NULL)
+   {
+      if(!strcmp(p_mat->name, mat1))
+	 cmd[2] = p_mat->file;
+      if(!strcmp(p_mat->name, mat2))
+	 cmd[3] = p_mat->file;
+      if(cmd[2] != NULL && cmd[3] != NULL)
+	 break;
+      p_mat = p_mat->next;
+   }
+   if(cmd[2] != NULL && cmd[3] != NULL)
+      return external_cmd(cmd);
+   fprintf(stderr,"Philab: au moins une des deux matrice %s et %s n'est pas chargée, voyez help load\n", mat1, mat2);
    return;
 }
 
