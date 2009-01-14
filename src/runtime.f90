@@ -11,6 +11,7 @@ program runtime
   use mod_utils
   use mod_gauss
   use mod_pw_iter
+  use mod_trace
 
   implicit none
 
@@ -123,6 +124,12 @@ program runtime
         print*,frobenius(A)
      else
         print*,frobenius(C)
+     end if
+  case('trace')
+     if(T(1) == 'C') then
+        print*,trace(A)
+     else
+        print*,trace(C)
      end if
   case('print')
      if(T(1) == 'C') then

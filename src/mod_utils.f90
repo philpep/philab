@@ -18,7 +18,6 @@ module mod_utils
      module procedure readmat_i, readmat_e
   end interface
 
-
 contains
 
   !   __  __            _       _   

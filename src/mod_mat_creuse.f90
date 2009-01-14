@@ -93,8 +93,7 @@ contains
     implicit none
     type(element), dimension(:), intent(in) :: A,B
     integer, dimension(maxval(A%ind_l),maxval(B%ind_c)) :: prod_ee
-    prod_ee = 0
-    ! TODO
+    prod_ee = A*mat2mat(B)
   end function prod_ee
 
   ! Matrice creuse * matrice integer

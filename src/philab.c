@@ -220,7 +220,7 @@ int main(void)
       if(saisie)
 	 add_history(saisie);
 #else
-      printf("%s", prompt);
+      printf(prompt);
       saisie = malloc(sizeof(char) * SIZE);
       fgets(saisie, SIZE, stdin);
       if(NULL != (p = strrchr(saisie, '\n')))
