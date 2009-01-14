@@ -285,9 +285,27 @@ int main(void)
 void make_cmd(char *str)
 {
    char *argv[MAX_ARG];
-   const char *p;
+   char *outfile = NULL;
+   char *p;
+   const char *shell_cmd;
    size_t i = 0;
    const builtin *p_builtin = builtin_cmd;
+
+   /* On trouve le nom du fichier de sortie */
+   if(NULL != (p = strchr(str, '>')))
+   {
+      *p = '\0';
+      p++;
+      /* On supprime les espace du debut */
+      while(*p == ' ')
+	 *(p++) = '\0';
+      outfile = p;
+
+      /* Mais aussi ceux de la fin */
+      if(NULL != (p = strchr(outfile, ' ')))
+	 *p = '\0';
+   }
+
 
    /* On parse la saisie suivant les espaces */
    p = strtok(str, " ");
@@ -315,7 +333,7 @@ void make_cmd(char *str)
 	 else if(p_builtin->f2 != NULL)
 	    p_builtin->f2(argv[0], argv[1]);
 	 else if(p_builtin->f3 != NULL)
-	    p_builtin->f3(argv[0], argv[1], argv[2]);
+	    p_builtin->f3(argv[0], argv[1], argv[2], outfile);
 	 else
 	    break;
 	 FREE_ARGV();
@@ -334,22 +352,22 @@ void make_cmd(char *str)
 
    /* On teste sur les commandes shell autorisées */
    i = 0;
-   p = autorised_cmd[0];
-   while(p != NULL)
+   shell_cmd = autorised_cmd[0];
+   while(shell_cmd != NULL)
    {
-      if(!strcmp(argv[0], p))
+      if(!strcmp(argv[0], shell_cmd))
       {
 	 external_cmd(argv);
 	 FREE_ARGV();
 	 return;
       }
-      p = autorised_cmd[++i];
+      shell_cmd = autorised_cmd[++i];
    }
 
    /* Si on veut effectuer la somme ou le produit de deux matrices */
    if(argv[1] != NULL && (!strcmp(argv[1], "+")||!strcmp(argv[1], "*")))
    {
-      operateur(argv[0], argv[2], argv[1]);
+      operateur(argv[0], argv[2], argv[1], outfile);
       FREE_ARGV();
       return;
    }
@@ -447,6 +465,11 @@ void load(char *path)
    {
       if(!strcmp(p_ll->name, new->name))
       {
+	 /* Cas de la matrice de sortie par defaut :
+	  * on ne la recharge pas */
+	 if(!strcmp(p_ll->name, "ans"))
+	    return two_param(PRINT, "ans");
+
 	 fprintf(stderr,"Philab: warning: matrix %s is already exist, overwrite...\n", new->name);
 	 unload(p_ll->name);
 	 break;
@@ -475,6 +498,7 @@ void load(char *path)
    new->next = ll_matrix;
    ll_matrix = new;
    /* On affiche la matrice chargée */
+   printf("%s = \n", new->name);
    two_param(PRINT, ll_matrix->name);
    return;
 }
@@ -515,12 +539,12 @@ void unload(char *name)
 
 
 /* calcul d'une operation + ou * */
-void operateur(char *mat1, char *mat2, char *op)
+void operateur(char *mat1, char *mat2, char *op, char *outfile)
 {
    if(!strcmp(op, "+"))
-      return tree_param(SUM, mat1, mat2);
+      return tree_param(SUM, mat1, mat2, outfile);
    else if(!strcmp(op, "*"))
-      return tree_param(PROD, mat1, mat2);
+      return tree_param(PROD, mat1, mat2, outfile);
    else
       fprintf(stderr,"Philab: Il y a eu une érreur\n");
    return;
@@ -551,9 +575,9 @@ void two_param(char *func, char *mat)
 
 
 /* La fonction d'execution à trois paramêtres */
-void tree_param(char *func, char *mat1, char *mat2)
+void tree_param(char *func, char *mat1, char *mat2, char *outfile)
 {
-   char *cmd[6] = {getenv("RUNTIME_PATH"), func, NULL, NULL, NULL};
+   char *cmd[7] = {getenv("RUNTIME_PATH"), func, NULL, NULL, outfile, NULL};
    matrix *p_mat = ll_matrix;
 
    if(NULL == mat1 || NULL == mat2)
@@ -571,7 +595,16 @@ void tree_param(char *func, char *mat1, char *mat2)
       p_mat = p_mat->next;
    }
    if(cmd[2] != NULL && cmd[3] != NULL)
-      return external_cmd(cmd);
+   {
+      external_cmd(cmd);
+      if(!strcmp(func, PW_ITER)||!strcmp(func, GAUSS))
+	 return;
+      if(NULL == outfile)
+	 load("ans.mat");
+      else
+	 load(outfile);
+      return;
+   }
    fprintf(stderr,"Philab: au moins une des deux matrice %s et %s n'est pas chargée, voyez help load\n", mat1, mat2);
    return;
 }

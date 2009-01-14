@@ -18,9 +18,11 @@ program runtime
   ! Déclaration des variables
 
   ! Les arguments de la ligne de commande
-  character (len=256), dimension(3) :: argv
+  character (len=256), dimension(4) :: argv
   ! Les fichiers d'entrée.
   character (len=256), dimension(2) :: infile
+  ! Le fichier de sortie
+  character (len=256) :: outfile
   ! Type des fichiers d'entrée.
   character, dimension(2) :: T
   ! Les matrices creuses
@@ -30,6 +32,7 @@ program runtime
   ! En fait le programme sait executer des fonctions
   ! sur deux matrices au maximum, donc avec le "jeux" de
   ! matrices A,B,C,D on peut tout faire.
+  ! La matrice O est la matrice de retour
   integer :: i
 
 
@@ -40,7 +43,7 @@ program runtime
   ! extension GNU intégrée dans gfortran.
   ! Ce n'est pas très portable, mais c'est la
   ! seule manière que je connais.
-  do i = 1,min(iargc(),3)
+  do i = 1,min(iargc(),4)
      call getarg(i, argv(i))
   end do
 
@@ -59,6 +62,14 @@ program runtime
   case default
      infile(1) = argv(2)
      infile(2) = argv(3)
+
+     ! On fixe le nom du fichier de sortie
+     if(iargc() == 4) then
+        outfile = argv(4)
+     else
+        outfile = "ans.mat"
+     end if
+
   end select
 
 
@@ -139,29 +150,34 @@ program runtime
      end if
   case('produit')
      if(T(1) == 'C' .and. T(2) == 'C') then
-        call mprint(A*B)
+        call export(A*B, outfile)
      elseif (T(1) == 'C' .and. T(2) == 'I') then
-        call mprint(A*D)
+        call export(A*D, outfile)
      elseif (T(1) == 'I' .and. T(2) == 'C') then
-        call mprint(C*B)
+        call export(C*B, outfile)
      elseif (T(1) == 'I' .and. T(2) == 'I') then
-        call mprint(matmul(C, D))
+        call export(matmul(C, D), outfile)
      else ! On est jamais trop prudent :)
         print*,'Il y a eu une erreur lors de la lecture de la matrice...'
      end if
   case('somme')
      if(T(1) == 'C' .and. T(2) == 'C') then
-        call mprint(A+B)
+        call export(A+B, outfile)
      elseif (T(1) == 'C' .and. T(2) == 'I') then
-        call mprint(A+D)
+        call export(A+D, outfile)
      elseif (T(1) == 'I' .and. T(2) == 'C') then
-        call mprint(B+C)
+        call export(B+C, outfile)
      elseif (T(1) == 'I' .and. T(2) == 'I') then
-        call mprint(C+D)
+        call export(C+D, outfile)
      else ! On est jamais trop prudent :)
         print*,'Il y a eu une erreur lors de la lecture de la matrice...'
      end if
   case('gauss')
+     ! Les solutions ne seront pas exportés
+     ! car le retour est une matrice réele
+     ! donc si on l'exporte ça va générer des
+     ! problèmes car le type réel n'est pas
+     ! encore supporté par philab
      if(T(1) == 'C' .and. T(2) == 'C') then
         call mprint(gauss(mat2mat(A),mat2mat(B)))
      elseif (T(1) == 'C' .and. T(2) == 'I') then

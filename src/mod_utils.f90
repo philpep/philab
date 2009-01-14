@@ -120,4 +120,22 @@ contains
   end subroutine readmat_i
   ! }}}
 
+  ! Permet d'exporter une matrice dans le fichier
+  ! de sortie
+  subroutine export(A, fichier)
+
+  integer, dimension(:,:), intent(in) :: A
+  character(len=256), intent(in) :: fichier
+  integer :: i
+
+  open(unit=15, file=fichier)
+  write(15,*) 'I'
+  write(15,*) size(A,1), size(A,2)
+  ! On ecris lignes par lignes
+  do i=1,size(A,1)
+     write(15,*) A(i,:)
+  end do
+  close(15)
+  end subroutine export
+
 end module mod_utils
