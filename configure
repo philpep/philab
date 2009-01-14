@@ -56,6 +56,7 @@ exist unistd.h
 exist pwd.h
 exist sys/wait.h
 exist errno.h
+exist assert.h
 
 
 cat Makefile.in >> Makefile

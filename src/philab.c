@@ -23,7 +23,7 @@ const builtin builtin_cmd[] = {
    {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load, NULL},
    {"unload", "unload a matrix", "unload A", unload, NULL},
    {"print", "print a matrix", "print matrix_name, or simply matrix_name", print, NULL},
-   {"norm", "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
+   {"norme", "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
    {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL, NULL},
    {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL}
@@ -34,49 +34,64 @@ const char *autorised_cmd[10] = {"mkdir", "rm", "cp", "mv", "ls", "pwd", "vim", 
 
 matrix *ll_matrix = NULL;
 
-/* init_env() : initialise les variables
- * d'environement */
-/* {{{ init_env() */
+/* 
+ * init_env() : initialise les variables
+ * d'environement
+ */
 void init_env(void)
 {
    char *pwd, *p;
    uid_t uid = getuid();
    struct passwd *user = getpwuid(uid);
    struct utsname host;
+
    uname(&host);
    /* On utilise assert car si setenv
     * echoue le programme est inutilisable */
+
    assert(setenv("HOME", user->pw_dir, 0) == 0);
    assert(setenv("HOST", host.nodename, 0) == 0);
+
    pwd = getpwd();
+
    p = malloc(sizeof(char) * (2+strlen(pwd)+strlen(RUNTIME)));
+
    strcpy(p, pwd);
    strcat(p, "/"RUNTIME);
+
    assert(setenv("RUNTIME_PATH", p, 1) == 0);
+
    free(p);
    free(pwd);
+
    return;
 }
-/* }}} */
 
-/* Cette fonction renvoie le repertoire courant sous
- * forme d'une chaine de caractère */
-/* {{{ getpwd() */
+/* 
+ * Cette fonction renvoie le repertoire courant sous
+ * forme d'une chaine de caractère
+ */
 char *getpwd(void)
 {
    char *p;
+   /*
+    * Au début, j'utilisais une boucle avec
+    * realloc pour augmenter la taille de p
+    * mais au bout d'un moment ça segfault
+    * pour une raison que j'ignore encore...
+    */
    p = malloc(sizeof(char) * 256);
    if(NULL == getcwd(p, 256))
       strcpy(p, "somewere");
    return p;
 }
-/* }}} */
 
-/* La commande cd, elle n'est pas comme les autres car elle
+/* 
+ * La commande cd, elle n'est pas comme les autres car elle
  * doit absolument être éxecutée dans le processus courant.
  * (Sinon c'est le processus fils qui changerais son repertoire
- * courant...) */
-/* {{{ builtin_cd() */
+ * courant...) 
+ */
 void builtin_cd(char *path)
 {
    /* On change tout simplement le repertoire courant */
@@ -116,24 +131,25 @@ void builtin_cd(char *path)
 	 }
    return;
 }
-/* }}} */
 
-/* get_prompt renvoie une chaine de caractère qui
- * contient le prompt */
-/* {{{ get_prompt() */
+/* 
+ * get_prompt renvoie une chaine de caractère qui
+ * contient le prompt
+ */
 char *get_prompt(void)
 {
    /* Déclarations */
    char *pwd, *q, *prompt, *home, *host;
    home = getenv("HOME");
    host = getenv("HOST");
+   /* Si on ne peut avoir le repertoire courant on renvoie un prompt minimal */
    if(NULL == (pwd = getpwd()))
    {
       prompt = malloc(sizeof(char) * 2);
       strcpy(prompt, ">");
       return prompt;
    }
-   /* On va chercher les information dont on a besoin */
+
    q = malloc(sizeof(char) * 1+strlen(pwd));
    /* Cette partie remplace $HOME par ~ dans dans et met
     * la nouvelle chaine obtenue dans q */
@@ -144,6 +160,7 @@ char *get_prompt(void)
    }
    else
       strcpy(q, pwd);
+
    /* On écrit le prompt */
    prompt = malloc(sizeof(char) * 50+strlen(q)+strlen(host));
    strcpy(prompt, "[\033[31mphilab\033[37m@\033[36m");
@@ -153,19 +170,22 @@ char *get_prompt(void)
    strcat(prompt, "\033[37m] % ");
    free(q);
    free(pwd);
+
    return prompt;
 }
-/* }}} */
 
-/* Permet de lancer des commandes externes
- * en dupliquant le processus courant */
-/* {{{ external_cmd() */
+/* 
+ * Permet de lancer des commandes externes
+ * en dupliquant le processus courant 
+ */
 void external_cmd(char **argv)
 {
-   /* Le processus est dupliqué fork()
+   /* 
+    * Le processus est dupliqué fork()
     * le nouveau processus execute la commande
     * et le père (philab) attend la mort du processus
-    * fils */
+    * fils
+    */
    pid_t pid;
    if(argv[0] == NULL)
       return;
@@ -178,23 +198,26 @@ void external_cmd(char **argv)
       else
 	 exit(execvp(argv[0], argv));
    }
-   /* Avec exit, on s'assure que le processus fils sera quand même tué
-    * (si la commande n'existe pas par exemple) */
+   /* 
+    * Avec exit, on s'assure que le processus fils sera quand même tué
+    * (si la commande n'existe pas par exemple)
+    */
+
    /* Père : il attend la mort du fils */
    else if (pid != -1)
       wait(NULL);
-   /* Si on est arrivé jusque là c'est qu'il y a un gros
-    * problème (plus possible de dupliquer des processus...
-    * Donc on quitte brutalement */
+   /* 
+    * Si on est arrivé jusque là c'est qu'il y a un gros
+    * problème (plus possible de dupliquer des processus...)
+    * Donc on quitte brutalement 
+    */
    else
       abort();
    return;
 }
-/* }}} */
 
 
 /* La fonction main, tout commence ici */
-/* {{{ main() */
 int main(void)
 {
    char *prompt, *saisie;
@@ -216,6 +239,9 @@ int main(void)
       prompt = get_prompt();
       /* On recupère la saisie avec ou sans readline */
 #ifdef _USE_READLINE
+      /* TODO : readline permet de faire de la completion
+       * personnalisée, on pourrait l'utiliser mais je suis
+       * trop feignant */
       saisie = readline(prompt);
       if(saisie)
 	 add_history(saisie);
@@ -223,13 +249,23 @@ int main(void)
       printf(prompt);
       saisie = malloc(sizeof(char) * SIZE);
       fgets(saisie, SIZE, stdin);
+
+      /* On supprime le '\n' de la fin */
       if(NULL != (p = strrchr(saisie, '\n')))
 	 *p = '\0';
       else
 	 while('\n' != (c = fgetc(stdin)) && c != EOF);
+
 #endif /* _USE_READLINE */
+
+      /* Parfois il faut arreter philab */
       if(!strcmp(saisie, "exit") || !strcmp(saisie, "quit"))
+      {
+	 free(saisie);
+	 free(prompt);
 	 break;
+      }
+
       /* make_cmd analyse la saisie et execute ce qu'il faut
        * executer */
       make_cmd(saisie);
@@ -238,18 +274,20 @@ int main(void)
    }
    return 0;
 }
-/* }}} */
 
-/* {{{ make_cmd() */
+/* 
+ * La fonction qui va parser la saisie et appeler les bonnes
+ * fonctions.
+ */
 void make_cmd(char *str)
 {
-   char *argv[10];
+   char *argv[MAX_ARG];
    const char *p;
    size_t i = 0;
    const builtin *p_builtin = builtin_cmd;
    /***********/
    p = strtok(str, " ");
-   while(p != NULL && i < 9)
+   while(p != NULL && i < MAX_ARG-1)
    {
       argv[i] = malloc(sizeof(char) * (1+strlen(p)));
       strcpy(argv[i++], p);
@@ -309,7 +347,6 @@ void make_cmd(char *str)
 /* }}} */
 
 /* Affiche l'aide en couleurs avec des belles intentations */
-/* {{{ help() */
 void help(char *p)
 {
    const builtin *p_builtin = builtin_cmd;
@@ -336,9 +373,8 @@ void help(char *p)
    printf("Error : \"%s\" is not a valid philab command\n", p);
    return;
 }
-/* }}} */
 
-/* {{{ load() */
+/* Permet de charger en memoire une matrice dans la liste chainée des matrices */
 void load(char *path)
 {
    matrix *new, *p_ll = ll_matrix;
@@ -346,6 +382,8 @@ void load(char *path)
    char *pwd = getpwd(), *p, *q;
    if(NULL == path)
       return help("load");
+
+   /* Affiche la liste des matrices chargées en memoire */
    if(!strcmp(path, "-l"))
    {
       new = ll_matrix;
@@ -356,53 +394,76 @@ void load(char *path)
       }
       return;
    }
+
+   /* On teste si le fichier peut être ouvert */
    if (NULL == (fd = fopen(path, "r"))||NULL == pwd)
+   {
       fprintf(stderr,"Philab: Unable to open %s file\n", path);
+      return;
+   }
+
+   /* On ferme le fichier */
+   fclose(fd);
+
+   /* 
+    * On veut tester si le fichier à la bonne extension
+    * à la fin de cette operation p pointera sur le debut du
+    * nom du fichier 
+    */
+   if(NULL != (p = strrchr(path, '/')))
+      p++;
+   else
+      p = path;
+
+   if(NULL == (q = strrchr(p, '.'))||strcmp(q, EXTENSION)||q == p)
+   {
+      fprintf(stderr,"Philab: format error, file must have a "EXTENSION" extension\n");
+      free(pwd);
+      return;
+   }
+
+   /* On ajoute le nouvel ellement dans la liste chainée */
+   new = malloc(sizeof(matrix));
+   new->name = malloc(sizeof(char) * (q-p));
+   strncpy(new->name, p, q-p);
+   new->name[q-p] = '\0';
+
+   /* On teste si l'alias n'est pas déjà en cours d'utilisation */
+   while(p_ll != NULL)
+   {
+      if(!strcmp(p_ll->name, new->name))
+      {
+	 fprintf(stderr,"Philab: warning: matrix %s is already exist, overwrite...\n", new->name);
+	 unload(p_ll->name);
+	 break;
+      }
+      p_ll = p_ll->next;
+   }
+
+   /* 
+    * On veut mettre le path absolu du fichier dans
+    * new->file pour ne pas être dépendant du repertoire
+    * courrant dans lequel on est...
+    */
+   if(path[0] == '/')
+   {
+      new->file = malloc(sizeof(char) * (1+strlen(path)));
+      strcpy(new->file, path);
+   }
    else
    {
-      fclose(fd);
-      if(NULL != (p = strrchr(path, '/')))
-	 p++;
-      else
-	 p = path;
-      if(NULL == (q = strrchr(p, '.'))||strcmp(q, EXTENSION)||q == p)
-	 fprintf(stderr,"Philab: format error, file must have a .mat extension\n");
-      else
-      {
-	 new = malloc(sizeof(matrix));
-	 new->name = malloc(sizeof(char) * (q-p));
-	 strncpy(new->name, p, q-p);
-	 new->name[q-p] = '\0';
-	 while(p_ll != NULL)
-	 {
-	    if(!strcmp(p_ll->name, new->name))
-	    {
-	       fprintf(stderr,"Philab: warning: matrix %s is already exist, overwrite...\n", new->name);
-	       unload(p_ll->name);
-	       break;
-	    }
-	    p_ll = p_ll->next;
-	 }
-	 if(path[0] == '/')
-	 {
-	    new->file = malloc(sizeof(char) * (1+strlen(path)));
-	    strcpy(new->file, path);
-	 }
-	 else
-	 {
-	    new->file = malloc(sizeof(char) * (2+strlen(pwd)+strlen(path)));
-	    strcpy(new->file, pwd);
-	    strcat(new->file, "/");
-	    strcat(new->file, path);
-	 }
-	 new->next = ll_matrix;
-	 ll_matrix = new;
-	 print(ll_matrix->name);
-      }
+      new->file = malloc(sizeof(char) * (2+strlen(pwd)+strlen(path)));
+      strcpy(new->file, pwd);
+      strcat(new->file, "/");
+      strcat(new->file, path);
    }
+   /* On lie le nouvel ellement dans la liste chainée */
+   new->next = ll_matrix;
+   ll_matrix = new;
+   /* On affiche la matrice chargée */
+   print(ll_matrix->name);
    return;
 }
-/* }}} */
 
 /* {{{ unload() */
 void unload(char *name)

@@ -19,9 +19,13 @@ void make_cmd(char *str);
 } while(0)
 
 
-/* Taille maximale de la saisie si
- * _USE_READLINE n'est pas definit */
+/* 
+ * Taille maximale de la saisie si
+ * _USE_READLINE n'est pas definit
+ */
 #define SIZE 512
+/* Taille maximale du nombre d'arguments */
+#define MAX_ARG 10
 
 /* Quelques constantes */
 #define RUNTIME "runtime" /* Le nom de l'executable fortran */
