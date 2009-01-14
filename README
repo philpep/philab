@@ -78,6 +78,7 @@
 #
 #
 # Des matrices d'exemples sont dans examples/
+# LES MATRICES DOIVENT ABSOLUMENT AVOIR L'EXTENSION .mat !!!
 # Il y a un format de matrice a respecter :
 # Pour les matrices creuse :
 # 	- 1ère ligne : C
@@ -95,4 +96,14 @@
 #
 #
 # Pour utiliser le programme sans l'interface il faut le lancer comme ceci :
-# ./runtime fonction fichier_matrices
+# ./runtime fonction fichier_matrices [fichier de sortie]
+#
+# Le fichier de sortie est interprété seulement pour les fonctions
+# somme et produit, dans ce dernier cas s'il n'est pas spécifié
+# il sera le fichier 'ans.mat'
+#
+# Les fonctions philab sont celles ci :
+# print A.mat ---> Affiche la matrice A sur stdout
+# somme A.mat B.mat C.mat ---> Met la somme A+B dans le fichier C.mat (rien n'est affiché sur stdout)
+# produit A.mat B.mat C.mat ---> Met le produit matriciel A*B dans le fichier C.mat (rien sur stdout)
+# trace A.mat ---> Affiche la trace de A sur stdout

@@ -583,6 +583,7 @@ void tree_param(char *func, char *mat1, char *mat2, char *outfile)
    if(NULL == mat1 || NULL == mat2)
       return help(func);
 
+
    /* On cherche les matrices */
    while(p_mat != NULL)
    {
@@ -608,4 +609,3 @@ void tree_param(char *func, char *mat1, char *mat2, char *outfile)
    fprintf(stderr,"Philab: au moins une des deux matrice %s et %s n'est pas chargée, voyez help load\n", mat1, mat2);
    return;
 }
-

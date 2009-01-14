@@ -122,6 +122,7 @@ contains
 
   ! Permet d'exporter une matrice dans le fichier
   ! de sortie
+  ! {{{ export
   subroutine export(A, fichier)
 
   integer, dimension(:,:), intent(in) :: A
@@ -137,5 +138,6 @@ contains
   end do
   close(15)
   end subroutine export
+  ! }}}
 
 end module mod_utils

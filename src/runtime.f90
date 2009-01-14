@@ -51,7 +51,7 @@ program runtime
   ! d'arguments passés a la ligne de commande.
   select case (iargc())
   case(0,1)
-     print*,'Liser le fichier README pour comprendre comment utiliser ce programme'
+     print*,'Lisez le fichier README pour comprendre comment utiliser ce programme'
      stop
   case (2)
      if(argv(1) == 'produit' .or. argv(1) == 'somme' .or. argv(1) == 'gauss') then
@@ -60,8 +60,12 @@ program runtime
      end if
      infile(1) = argv(2)
   case default
-     infile(1) = argv(2)
-     infile(2) = argv(3)
+     if(argv(1) /= 'norme') then
+        infile(1) = argv(2)
+        infile(2) = argv(3)
+     else
+        infile(1) = argv(3)
+     end if
 
      ! On fixe le nom du fichier de sortie
      if(iargc() == 4) then
@@ -96,7 +100,7 @@ program runtime
   ! la commande ne nécessite qu'une seule matrice,
   ! calcul de normes par exemple).
 
-  if (iargc() > 2) then
+  if (iargc() > 2 .and. argv(1) /= 'norme') then
      ! La methode est la même...
      open(unit=15, status='OLD', file=infile(2))
      read(15,*) T(2)
@@ -118,24 +122,30 @@ program runtime
   ! On teste sur la commande et sur les types de
   ! matrices.
   select case (argv(1))
-  case('norme1')
-     if(T(1) == 'C') then
-        print*,norme_1(A)
-     else
-        print*,norme_1(C)
-     end if
-  case('normeinf')
-     if(T(1) == 'C') then
-        print*,norme_inf(A)
-     else
-        print*,norme_inf(C)
-     end if
-  case('normefro')
-     if(T(1) == 'C') then
-        print*,frobenius(A)
-     else
-        print*,frobenius(C)
-     end if
+  case('norme')
+     select case (argv(2))
+     case('1')
+        if(T(1) == 'C') then
+           print*,norme_1(A)
+        else
+           print*,norme_1(C)
+        end if
+     case('inf')
+        if(T(1) == 'C') then
+           print*,norme_inf(A)
+        else
+           print*,norme_inf(C)
+        end if
+     case('fro')
+        if(T(1) == 'C') then
+           print*,frobenius(A)
+        else
+           print*,frobenius(C)
+        end if
+     case default
+        write(0,*) argv(3), 'n est pas une norme valide'
+     end select
+
   case('trace')
      if(T(1) == 'C') then
         print*,trace(A)
