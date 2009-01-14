@@ -19,13 +19,16 @@
 
 /* La liste des commandes de philab */
 const builtin builtin_cmd[] = {
-   {"help", "print help", "help [cmd]", help, NULL},
-   {"load", "load a matrix by a file", "load a.mat (matrix a.mat will be aliased to 'a')", load, NULL},
-   {"unload", "unload a matrix", "unload A", unload, NULL},
-   {PRINT, "print a matrix", "print matrix_name, or simply matrix_name", print, NULL},
-   {NORME, "print the norm of a matrix", "norm [1|inf|fro] A", NULL, NULL},
-   {"+", "Just print the sum of two matrix", "A + B (with spaces please)", NULL, NULL},
-   {"*", "Just print the multiplication of two matrix", "A * B (with spaces please)", NULL, NULL},
+   {"help", "Affiche l'aide", "help [cmd]", help, NULL},
+   {"load", "Charge une matrice dans la memoire", "load a.mat ('a' sera un alias vers la matrice a.mat)", load, NULL},
+   {"unload", "Décharge une matrice", "unload A", unload, NULL},
+   {PRINT, "Affiche une matrice", PRINT" matrix_alias, ou plus simplement matrix_alias", print, NULL},
+   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL},
+   {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, NULL},
+   {"+", "Affiche la somme de deux matrices", "A + B (Avec les espaces svp)", NULL, NULL},
+   {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL},
+   {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL},
+   {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -285,7 +288,8 @@ void make_cmd(char *str)
    const char *p;
    size_t i = 0;
    const builtin *p_builtin = builtin_cmd;
-   /***********/
+
+   /* On parse la saisie suivant les espaces */
    p = strtok(str, " ");
    while(p != NULL && i < MAX_ARG-1)
    {
@@ -293,35 +297,35 @@ void make_cmd(char *str)
       strcpy(argv[i++], p);
       p = strtok(NULL, " ");
    }
-   while(i < 10)
+
+   while(i < MAX_ARG)
       argv[i++] = NULL;
+
    if(argv[0] == NULL)
       return;
+
    while(p_builtin->name != NULL)
    {
       if(!strcmp(p_builtin->name, argv[0]))
       {
-	 if(p_builtin->f_one_param != NULL)
+	 if(p_builtin->f != NULL)
 	 {
-	    p_builtin->f_one_param(argv[1]);
-	    FREE_ARGV();
-	    return;
-	 }
-	 else if(p_builtin->f_two_param != NULL)
-	 {
-	    p_builtin->f_two_param(argv[1], argv[2]);
+	    p_builtin->f(argv[1]);
 	    FREE_ARGV();
 	    return;
 	 }
       }
       p_builtin++;
    }
+
+   /* builtin_cd */
    if(!strcmp(argv[0], "cd"))
    {
       builtin_cd(argv[1]);
       FREE_ARGV();
       return;
    }
+
    i = 0;
    p = autorised_cmd[0];
    while(p != NULL)

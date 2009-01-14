@@ -30,10 +30,12 @@ void make_cmd(char *str);
 /* Quelques constantes */
 #define RUNTIME "runtime"
 #define PRINT "print"
+#define TRACE "trace"
+#define GAUSS "gauss"
+#define PW_ITER "pw_iter"
+#define NORME "norme"
 #define PROD "produit"
 #define SUM "somme"
-#define GAUSS "gauss"
-#define NORME "norme"
 #define EXTENSION ".mat"
 
 
@@ -52,8 +54,8 @@ typedef struct _builtin
    char *name; /* Le nom de la commande */
    char *description; /* Description */
    char *example; /* Un exemple d'utilisation */
-   void (*f_one_param)(char *); /* La fonction a appeler */
-   void (*f_two_param)(char *, char *);
+   void (*f)(char *); /* La fonction a appeler */
+   void (*f2)(char *, char *);
 } builtin;
 
 /* Les fonction représentées par les commande philab */
