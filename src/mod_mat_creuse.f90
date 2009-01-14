@@ -2,8 +2,8 @@ module mod_mat_creuse
   implicit none
   ! Definition du type matrice creuse
   type element
-     integer :: val
-     integer :: ind_l, ind_c
+     integer :: val ! La valeur
+     integer :: ind_l, ind_c ! Les indices ligne et colonnes
   end type element
 
   ! Surcharge de + et * pour le type element

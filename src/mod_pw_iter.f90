@@ -6,20 +6,25 @@ module mod_pw_iter
 contains
 
   function pw_iter(A,u)
+
+    implicit none
     integer, dimension(:,:), intent(in) :: A
     integer, dimension(:,:), intent(in) :: u
     integer, dimension(size(A,1),size(u,2)) :: pw_iter
     integer :: i, n = 10000
+    ! On va jusqu'a l'odre 10000 ce qui est largement suffisant
 
     if(size(u,2) /= 1 .or. size(A,1) /= size(A,2)) then
-       write(0,*) 'Error'
+       write(0,*) 'Matrices non conformes'
     else
+
        pw_iter = u/maxval(u(:,1))
 
        do i = 1,n
           pw_iter = matmul(A,pw_iter)
           pw_iter = pw_iter/maxval(pw_iter(:,1))
        end do
+
     end if
   end function pw_iter
 
