@@ -468,7 +468,7 @@ void load(char *path)
 	 if(!strcmp(p_ll->name, "ans"))
 	    return two_param(PRINT, "ans");
 
-	 fprintf(stderr,"Philab: warning: matrix %s is already exist, overwrite...\n", new->name);
+	 fprintf(stderr,"Philab: warning: matrix %s is already exists, overwrite...\n", new->name);
 	 unload(p_ll->name);
 	 break;
       }
