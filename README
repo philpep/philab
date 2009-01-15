@@ -8,14 +8,20 @@
 # Philab est un logiciel de calcul matriciel
 # minimaliste. Le moteur de calcul est codé en
 # fortran et l'interface en C. Toutes fois l'interface
-# est optionnelle et on peut executer toutes les
+# est optionnelle et on peut exécuter toutes les
 # opérations directement avec le programme fortran.
 #
 # J'ai codé philab en utilisant le gestionnaire de
 # version git. Pour voir les différentes étapes du
 # code, il y a un gitweb ici : http://git.philpep.ath.cx/philab.git
-# Pour recuperer la dernière version de philab :
+# Pour récupérer la dernière version de philab :
 # git clone git://philpep.ath.cx/philab.git
+#
+# Pour m'envoyer un patch commitez vos changements :
+# git commit -a -m "Votre message de commit"
+# Puis générez un patch :
+# git format-patch -M origin
+# Et envoyez le patch par mail
 #
 # Attention, le serveur est hébergé (pour le moment) sur mon petit
 # portable qui n'est pas allumé 24h/24 :-) , donc il
@@ -59,18 +65,26 @@
 #
 #
 # Compilation :
-# Munissez vous d'un shell confortable (J'entend par
+# Munissez vous d'un shell confortable (J'entends par
 # là que /bin/sh doit être un lien vers un shell
 # valable, bash, dash ou zsh sont largement suffisants).
-# Et executez le script de configuration :
+# Les dépendances sont les suivantes :
+# - gfortran : le compilateur GNU est obligatoire car j'utilise
+#              certaines extensions propres à gfortran.
+# - gcc : Pour compiler l'interface en C (je pense que tout autre compilateur C ferra l'affaire)
+# - Les bibliothèques standard du C (apt-get install build-essential sur Debian)
+# - la bibliothèque readline (optionnelle) : elle permet d'avoir de la complétion avec l'interface C
+#                                            (apt-get install libreadline-dev sur Debian)
+#
+# Et exécutez le script de configuration :
 # ./configure
 #
 # Cette commande générera le Makefile qui va bien dans
-# le repertoire courant.
+# le répertoire courant.
 # Ensuite compilez :
 # make
 #
-# Et executez :
+# Et exécutez :
 # ./philab
 #
 # La commande help permet d'avoir un rapide descriptif
@@ -82,8 +96,8 @@
 # Il y a un format de matrice a respecter :
 # Pour les matrices creuse :
 # 	- 1ère ligne : C
-# 	- 2ème ligne : nombre d'élléments non nuls
-# 	- Enuite renter les données sous la forme
+# 	- 2ème ligne : nombre d'éléments non nuls
+# 	- Ensuite renter les données sous la forme
 # 	  num_ligne num_colonne valeur,  par exemple '2 3 5'
 # 	  veut dire qu'il y a un 5 à la 2ème ligne 3ème colonne
 #
@@ -91,7 +105,7 @@
 # 	- 1ère ligne : I (pour Integer)
 # 	- 2ème ligne : les dimensions de la matrices par exemple
 # 	  '2 3' veut dire une matrice a 2 lignes et 3 colonnes
-# 	- Ensuites les valeurs lignes par ligne. Exemple '1 2 3'
+# 	- Ensuite les valeurs lignes par ligne. Exemple '1 2 3'
 #
 #
 #
@@ -111,12 +125,86 @@
 # norme inf A.mat ---> Affiche la norme infinie de la matrice sur stout
 # norme fro A.mat ---> Affiche la norme de frobenius de la matrice sur stdout
 # gauss C.mat D.mat ---> Affiche la solution du système Cx = D sur stdout
-# pw_iter E.mat F.mat ---> Affiche la plus grande valeur propre de E avec par la mehtode de la puissance itérée avec F comme premier vecteur (nombre d'itération = 10000)
+# pw_iter E.mat F.mat ---> Affiche la plus grande valeur propre de E avec par la méthode de la puissance itérée avec F comme premier vecteur (nombre d'itération = 10000)
 #
 # Les matrices données en exemple sont dans example/
 # A est une matrice creuse
 # B une matrice integer
-# La methode de gauss sur C et D marche bien :-)
-# La methode de la puissance itérée sur E et F aussi :-)
+# La méthode de gauss sur C et D marche bien :-)
+# La méthode de la puissance itérée sur E et F aussi :-)
+#
+# Si vous utilisez l'interface en C la liste des commandes
+# peut être obtenue en tapant 'help'
+#
+# Fonctionnement général de l'interface :
+# Pour pouvoir effectuer des calculs sur une matrice, la matrice
+# doit être chargée :
+# load /path/de/votre/matrice/foo.mat
+#
+# Ici la matrice s'appellera 'foo' (c'est une sorte d'alias).
+# Voici une session classique de philab :
+# load examples/C.mat
+# load examples/D.mat
+# gauss C D
+# load examples/E.mat
+# load examples/F.mat
+# pw_iter E F
+# C + E
+# C * E
+# E * C
+# exit   ! Les commandes exit ou quit permettent de quitter philab
+#
+# Par defaut, les matrices exportés sont dans le fichier 'ans.mat' (accessible via l'alias 'ans')
+# Si vous voulez exporter des matrices avec des noms personnalisés faites par exemple :
+# C * E > H.mat   ! ATTENTION : l'extension .mat est obligatoire ici car
+# je n'ai pas encore codé cette fonctionnalité comme il faut.
+# La matrice H.mat sera alors automatiquement chargée avec comme alias 'H'
+#
+# L'interface permet aussi de lancer les commandes shells les plus utiles :
+# mkdir, cd, rm, cp, mv, ls, pwd, vim, emacs, cat
+# Les options passent très bien si elle ne sont pas trop complexes :
+# ls -l
+# vim -t main fichier.c
+# ...
+#
+# Par contre les petites choses comme *"'`\[><]{};&$^ ne seront pas interprétés,
+# philab n'est pas un shell (par contre si ça vous intéresse j'ai aussi écris un shell
+# disponible ici : http://tux-atome.fr/philsh.git , toutes les contributions
+# sont les bienvenues :-)
+#
+# ATTENTION IL Y A DES BUGS CONNUS : Voyez le fichier BUGS
+# Les fonctions load et unload ne sont pas encore totalement fonctionnelles, n'en
+# abusez pas trop :-)
+# 
+# Il y a aussi une TODO list dans le fichier TODO
 #
 #
+# Message pour mon prof de fortran :
+#
+# Je suis conscient que mon projet ne répond pas exactement à vos demandes,
+# en particulier si on utilise pas l'interface en C. En fait une grosse partie
+# du code de runtime.f90 a été faite pour pouvoir faire cette interface facilement.
+# C'est pourquoi le programme fortran seul n'est pas interactif et peu sympathique à
+# utiliser. Je n'ai pas fais l'interface en fortran car je ne trouve pas que ce
+# soit un langage pratique pour le maniement complexe de chaînes de caractères (et
+# aussi parce que je connais mieux le C).
+# De plus je trouve que séparer clairement l'interface du "moteur de calcul" est une
+# bonne idée car il permet de diversifier les interface (On pourrais écrire une autre
+# interface dans un autre langage ou encore faire une interface graphique).
+#
+# Je n'ai pas codé pour tous les types. le programme fortran ne gère que les matrice 
+# creuses entières et les matrices entières. En effet le programme comportant à peu près
+# 15 fonctions sur lesquelles le type est une dépendance. Rajouter un seul type
+# revient à ré écrire 15 fonctions (dont seul le nom change). Ce qui peut nuire
+# à mes doigts, à mon clavier, au compilateur et à votre lecture :-).
+#
+# Pour le gestion des types le langage C offre des possibilités avec les unions,
+# on peut faire une sorte de structure dont tous les éléments partagent un
+# même segment de mémoire, le but étant bien sûr de n'utiliser qu'un seul élément
+# de la structure. On peut ainsi créer un type de type économe en mémoire (la taille
+# est donnée par la taille du plus grand élément) que l'on
+# peut envoyer à nos fonctions. Ensuite avec stdarg.h (et les va_list) on peut
+# faire des tests sur les types, mais je ne connais pas trop cette bibliothèque.
+# Je ne connais pas encore parfaitement le fortran, mais peut être si le programme
+# devient un peu plus gros, le ré écrire en C le rendra plus facile à maintenir et surtout
+# plus lisible.
