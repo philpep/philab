@@ -12,7 +12,7 @@ contains
     integer, dimension(:,:), intent(in) :: u
     integer, dimension(size(A,1),size(u,2)) :: pw_iter
     integer :: i, n = 10000
-    ! On va jusqu'a l'odre 10000 ce qui est largement suffisant
+    ! On va jusqu'a l'ordre 10000 ce qui est largement suffisant
 
     if(size(u,2) /= 1 .or. size(A,1) /= size(A,2)) then
        write(0,*) 'Matrices non conformes'
