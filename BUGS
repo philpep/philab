@@ -1,10 +1,11 @@
- * load a.mat
+ #1 * load a.mat
    load b.mat
    load a.mat
    load b.mat --> segfault
 
 Je pense que l'appel de la fonction unload() dans la fonction load() y est pour quelque chose, le pointeur de la structure est changé...
+  EDIT : Ce bug c'est fixé par lui même tout seul \o/
 
- * Dans les matrices creuses il est permis de mettre plusieurs valeurs avec les mêmes indices lignes et collones
+ #2 * Dans les matrices creuses il est permis de mettre plusieurs valeurs avec les mêmes indices lignes et collones
 
- * J'ai l'impression qu'il y a un bug dans mod_pw_iter.f90 , les resultats sont parfois surprenants...
+ #3 * J'ai l'impression qu'il y a un bug dans mod_pw_iter.f90 , les resultats sont parfois surprenants...
