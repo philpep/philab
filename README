@@ -61,7 +61,7 @@
 # Compilation :
 # Munissez vous d'un shell confortable (J'entend par
 # là que /bin/sh doit être un lien vers un shell
-# valable bash, dash ou zsh sont largement suffisants).
+# valable, bash, dash ou zsh sont largement suffisants).
 # Et executez le script de configuration :
 # ./configure
 #
@@ -107,3 +107,16 @@
 # somme A.mat B.mat C.mat ---> Met la somme A+B dans le fichier C.mat (rien n'est affiché sur stdout)
 # produit A.mat B.mat C.mat ---> Met le produit matriciel A*B dans le fichier C.mat (rien sur stdout)
 # trace A.mat ---> Affiche la trace de A sur stdout
+# norme 1 A.mat ---> Affiche la norme 1 de la matrice sur stout
+# norme inf A.mat ---> Affiche la norme infinie de la matrice sur stout
+# norme fro A.mat ---> Affiche la norme de frobenius de la matrice sur stdout
+# gauss C.mat D.mat ---> Affiche la solution du système Cx = D sur stdout
+# pw_iter E.mat F.mat ---> Affiche la plus grande valeur propre de E avec par la mehtode de la puissance itérée avec F comme premier vecteur (nombre d'itération = 10000)
+#
+# Les matrices données en exemple sont dans example/
+# A est une matrice creuse
+# B une matrice integer
+# La methode de gauss sur C et D marche bien :-)
+# La methode de la puissance itérée sur E et F aussi :-)
+#
+#
