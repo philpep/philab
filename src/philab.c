@@ -29,6 +29,7 @@ const builtin builtin_cmd[] = {
    {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL, tree_param},
    {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL, tree_param},
    {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL, tree_param},
+   {"exit", "Quitte le programme", "exit", NULL, NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL, NULL}
 };
 
@@ -261,19 +262,11 @@ int main(void)
 
 #endif /* _USE_READLINE */
 
-      /* Parfois il faut arreter philab */
-      if(!strcmp(saisie, "exit") || !strcmp(saisie, "quit"))
-      {
-	 free(saisie);
-	 free(prompt);
-	 break;
-      }
-
+      free(prompt);
       /* make_cmd analyse la saisie et execute ce qu'il faut
        * executer */
       make_cmd(saisie);
       free(saisie);
-      free(prompt);
    }
    return 0;
 }
@@ -322,6 +315,11 @@ void make_cmd(char *str)
    if(argv[0] == NULL)
       return;
 
+   if(!strcmp(argv[0], "exit") || !strcmp(argv[0], "quit"))
+   {
+      FREE_ARGV();
+      return exit_func(str);
+   }
    /* On teste les commandes philab */
    while(p_builtin->name != NULL)
    {
@@ -619,4 +617,22 @@ char *search_matrix(char *name)
    return NULL;
 }
 
-
+/* La fonction qui quitte philab
+ * elle recupère la dernière saisie pour
+ * la liberer et elle libère toute la liste
+ * chainée */
+void exit_func(char *str)
+{
+   matrix *p_ll = ll_matrix, *next;
+   free(str);
+   while(p_ll != NULL)
+   {
+      free(p_ll->name);
+      free(p_ll->file);
+      next = p_ll->next;
+      free(p_ll);
+      p_ll = next;
+   }
+   exit(0);
+   return;
+}

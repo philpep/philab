@@ -67,7 +67,9 @@ void load(char *path); /* Charge une matrice */
 void unload(char *name); /* Décharge une matrice */
 void two_param(char *func, char *mat);
 void tree_param(char *func, char *mat1, char *mat2, char *outfile);
-
+/* Operateur +  * */
 void operateur(char *mat1, char *mat2, char *op, char *outfile);
+/* La dernière fonction appelée si tout se passe normalement */
+void exit_func(char *str);
 
 #endif /* _INTERFACE_HEADER */

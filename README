@@ -152,6 +152,10 @@
 # C + E
 # C * E
 # E * C
+# norme 1 C
+# norme inf E
+# load examples/A.mat
+# norme fro A
 # exit   ! Les commandes exit ou quit permettent de quitter philab
 #
 # Par defaut, les matrices exportés sont dans le fichier 'ans.mat' (accessible via l'alias 'ans')
