@@ -26,7 +26,7 @@ const builtin builtin_cmd[] = {
    {TRACE, "Affiche la trace d'une matrice", TRACE" A", NULL, two_param, NULL},
    {"+", "Affiche la somme de deux matrices", "A + B (Avec les espaces svp)", NULL, NULL, NULL},
    {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL, NULL},
-   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL, NULL},
+   {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL, tree_param},
    {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL, tree_param},
    {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL, tree_param},
    {NULL, NULL, NULL, NULL, NULL, NULL}
@@ -573,16 +573,24 @@ void tree_param(char *func, char *mat1, char *mat2, char *outfile)
    if(NULL == mat1 || NULL == mat2)
       return help(func);
 
+   /* Petit Hack pour que la commande norme marche :-) */
+   if(!strcmp(func, NORME))
+      cmd[2] = mat1;
+
 
    if(cmd[2] != NULL && cmd[3] != NULL)
    {
       external_cmd(cmd);
-      if(!strcmp(func, PW_ITER)||!strcmp(func, GAUSS))
-	 return;
-      if(NULL == outfile)
-	 load("ans.mat");
-      else
-	 load(outfile);
+
+      /* Si les matrices ont été exportés on les charge en memoire
+       * (ce qui va permettre de les afficher entres autres) */
+      if(!strcmp(func, SUM) || !strcmp(func, PROD))
+      {
+	 if(NULL == outfile)
+	    load("ans.mat");
+	 else
+	    load(outfile);
+      }
       return;
    }
    fprintf(stderr,"Philab: au moins une des deux matrice %s et %s n'est pas chargée, voyez help load\n", mat1, mat2);
