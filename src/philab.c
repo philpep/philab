@@ -522,6 +522,7 @@ void unload(char *name)
       {
 	 free(mat->name);
 	 free(mat->file);
+	 /* TODO : j'ai l'impression qu'il y a un bug ici */
 	 if(prev != ll_matrix)
 	    prev->next = mat->next;
 	 else

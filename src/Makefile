@@ -33,7 +33,7 @@ mod_pw_iter.o: mod_pw_iter.f90 mod_mat_creuse.o
 
 mod_trace.o: mod_trace.f90 mod_mat_creuse.o
 
-runtime.o: runtime.f90 mod_mat_creuse.o mod_normes.o mod_gauss.o mod_utils.o mod_trace.o
+runtime.o: runtime.f90 mod_mat_creuse.o mod_normes.o mod_gauss.o mod_utils.o mod_trace.o mod_pw_iter.o
 
 
 # L'interface en C
