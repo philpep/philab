@@ -24,7 +24,7 @@ void make_cmd(char *str);
  * _USE_READLINE n'est pas définit
  */
 #define SIZE 512
-/* Taille maximale du nombre d'arguments */
+/* Nombre d'arguments maximal */
 #define MAX_ARG 10
 
 /* Quelques constantes */
