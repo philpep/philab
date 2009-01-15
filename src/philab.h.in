@@ -59,6 +59,8 @@ typedef struct _builtin
    void (*f3)(char *, char *, char *, char *outfile);  /* 3 param */
 } builtin;
 
+/* Fonction de recherche de matrice */
+char *search_matrix(char *name);
 /* Les fonction représentées par les commande philab */
 void help(char *p); /* Affiche l'aide */
 void load(char *path); /* Charge une matrice */

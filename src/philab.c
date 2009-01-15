@@ -553,22 +553,13 @@ void operateur(char *mat1, char *mat2, char *op, char *outfile)
 /* La fonction d'execution à deux paramêtres */
 void two_param(char *func, char *mat)
 {
-   char *cmd[5] = {getenv("RUNTIME_PATH"), func, NULL, NULL};
-   matrix *p_mat = ll_matrix;
+   char *cmd[5] = {getenv("RUNTIME_PATH"), func, search_matrix(mat), NULL};
 
    if(NULL == mat)
       return help(func);
 
-   /* On cherche la matrice */
-   while(p_mat != NULL)
-   {
-      if(!strcmp(p_mat->name, mat))
-      {
-	 cmd[2] = p_mat->file;
-	 return external_cmd(cmd);
-      }
-      p_mat = p_mat->next;
-   }
+   if(cmd[2] != NULL)
+      return external_cmd(cmd);
    fprintf(stderr, "Philab: %s n'est pas un nom de matrice chargée, voyez help load\n", mat);
    return;
 }
@@ -577,24 +568,12 @@ void two_param(char *func, char *mat)
 /* La fonction d'execution à trois paramêtres */
 void tree_param(char *func, char *mat1, char *mat2, char *outfile)
 {
-   char *cmd[7] = {getenv("RUNTIME_PATH"), func, NULL, NULL, outfile, NULL};
-   matrix *p_mat = ll_matrix;
+   char *cmd[7] = {getenv("RUNTIME_PATH"), func, search_matrix(mat1), search_matrix(mat2), outfile, NULL};
 
    if(NULL == mat1 || NULL == mat2)
       return help(func);
 
 
-   /* On cherche les matrices */
-   while(p_mat != NULL)
-   {
-      if(!strcmp(p_mat->name, mat1))
-	 cmd[2] = p_mat->file;
-      if(!strcmp(p_mat->name, mat2))
-	 cmd[3] = p_mat->file;
-      if(cmd[2] != NULL && cmd[3] != NULL)
-	 break;
-      p_mat = p_mat->next;
-   }
    if(cmd[2] != NULL && cmd[3] != NULL)
    {
       external_cmd(cmd);
@@ -609,3 +588,26 @@ void tree_param(char *func, char *mat1, char *mat2, char *outfile)
    fprintf(stderr,"Philab: au moins une des deux matrice %s et %s n'est pas chargée, voyez help load\n", mat1, mat2);
    return;
 }
+
+/* Cette fonction renvoie le fichier de la matrice name */
+char *search_matrix(char *name)
+{
+   matrix *p_ll = ll_matrix;
+
+   /* On ne sait jamais */
+   if(name == NULL)
+      return NULL;
+
+   /* On boucle sur la liste chainée
+    * jusqu'a trouver la matrice */
+   while(p_ll != NULL)
+   {
+      if(!strcmp(p_ll->name, name))
+	 return p_ll->file;
+      p_ll = p_ll->next;
+   }
+
+   return NULL;
+}
+
+
