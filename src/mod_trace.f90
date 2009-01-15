@@ -41,7 +41,7 @@ contains
     if(size(A,1) /= size(A,2)) then
        write(0,*) 'La matrice doit être carrée'
     else
-       ! On somme les coeficients diagonaux
+       ! On somme les coefficients diagonaux
        do i = 1,size(A,1)
           trace_i = trace_i + A(i,i)
        end do

@@ -1,7 +1,7 @@
 program runtime
   ! Programme principal.
   ! Il ne fait qu'analyser la ligne de commande
-  ! lire les bonnes matrices puis executer
+  ! lire les bonnes matrices puis exécuter
   ! la bonne fonction.
 
 
@@ -29,7 +29,7 @@ program runtime
   type(element), dimension(:), allocatable :: A,B
   ! Les matrices entières
   integer, dimension(:,:), allocatable :: C,D
-  ! En fait le programme sait executer des fonctions
+  ! En fait le programme sait exécuter des fonctions
   ! sur deux matrices au maximum, donc avec le "jeux" de
   ! matrices A,B,C,D on peut tout faire.
   ! La matrice O est la matrice de retour
@@ -78,7 +78,7 @@ program runtime
 
 
   ! On ouvre le premier fichier. status='OLD'
-  ! permet de générer une érreur si le fichier
+  ! permet de générer une erreur si le fichier
   ! n'existe pas.
   open(unit=15, status='OLD', file=infile(1))
   ! On lis le type de la première matrice.
@@ -101,7 +101,7 @@ program runtime
   ! calcul de normes par exemple).
 
   if (iargc() > 2 .and. argv(1) /= 'norme') then
-     ! La methode est la même...
+     ! La méthode est la même...
      open(unit=15, status='OLD', file=infile(2))
      read(15,*) T(2)
      close(15)
@@ -118,7 +118,7 @@ program runtime
 
 
   ! argv(1) est la commande que l'on veut
-  ! executer.
+  ! Exécuter.
   ! On teste sur la commande et sur les types de
   ! matrices.
   select case (argv(1))
@@ -184,7 +184,7 @@ program runtime
      end if
   case('gauss')
      ! Les solutions ne seront pas exportés
-     ! car le retour est une matrice réele
+     ! car le retour est une matrice réelle
      ! donc si on l'exporte ça va générer des
      ! problèmes car le type réel n'est pas
      ! encore supporté par philab
@@ -216,7 +216,7 @@ program runtime
   end select
 
 
-  ! On libère la memoire
+  ! On libère la mémoire
   ! si on pouvait avoir une telle fonction en C :-)
   if(allocated(A)) then
      deallocate(A)

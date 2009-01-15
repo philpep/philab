@@ -43,7 +43,7 @@ contains
     integer :: i ! Variable qui servira dans la boucle
 
     ! Pour chaque colonne, on calcule la
-    ! somme des elements qu'il y a sur cette
+    ! somme des éléments qu'il y a sur cette
     ! colonne.
 
     do i = 1,size(A,2)
@@ -78,7 +78,7 @@ contains
   ! }}}
 
   ! {{{ norme_inf
-  ! La norme infinie a la même definition
+  ! La norme infinie a la même définition
   ! que la norme 1 en remplaçant 'colonne'
   ! par 'ligne'
   function norme_inf_i (A)
@@ -117,7 +117,7 @@ contains
   ! }}}
 
   ! {{{ frobenius
-  ! On somme les carrée de tous les coeficients et
+  ! On somme les carrée de tous les coefficients et
   ! on prend la racine carrée de ce nombre...
   function frobenius_i(A)
 

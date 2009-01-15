@@ -6,8 +6,8 @@ module mod_gauss
 
 contains
 
-  ! La methode de gauss pour les matrice integer
-  ! Resolution d'un système Ax = b où A est de dimension n x n
+  ! La méthode de gauss pour les matrice integer
+  ! Résolution d'un système Ax = b où A est de dimension n x n
   ! et b de dimension n x 1
   function gauss (A,b)
 
@@ -25,11 +25,11 @@ contains
     real :: c
     ! n = dimension de la matrice b
     n = size(A,1)
-    ! On initialise le resultat à 0
+    ! On initialise le résultat à 0
     gauss = 0
 
-    ! Methode de gauss classique avec des tests
-    ! sur les érreurs
+    ! Méthode de gauss classique avec des tests
+    ! sur les erreurs
     if(n /= size(A,2)) then
        write(0,*) 'La matrice A doit être carrée'
     elseif (size(b,1) /= n .or. size(b,2) /= 1) then
@@ -42,7 +42,7 @@ contains
              if(U(i,i) /= 0) then
                 c = U(j,i)/U(i,i)
                 do k = i+1,n
-                   ! Pour se convaincre qu'on triangularise U superieurement :-)
+                   ! Pour se convaincre qu'on triangularise U supérieurement :-)
                    ! print*,'U(',j,',',k,') = U(',j,',',k,')-',c,'*U(',i,',',k,')'
                    U(j,k) = U(j,k)-c*U(i,k)
                 end do
@@ -55,7 +55,7 @@ contains
        end do
     end if
 
-    ! Ici resoud le système Ux = v avec U triangulaire,
+    ! Ici on résoud le système Ux = v avec U triangulaire,
     ! en réalité elle ne l'est pas, mais ça n'influence pas
     ! le calcul.
     gauss = v

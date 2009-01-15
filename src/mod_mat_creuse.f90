@@ -1,12 +1,12 @@
 module mod_mat_creuse
   implicit none
-  ! Definition du type matrice creuse
+  ! Définition du type matrice creuse
   type element
      integer :: val ! La valeur
      integer :: ind_l, ind_c ! Les indices ligne et colonnes
   end type element
 
-  ! Surcharge de + et * pour le type element
+  ! Surcharge de + et * pour le type élément
   interface operator (+)
      module procedure somme_ei, somme_ee
   end interface
@@ -36,7 +36,7 @@ contains
 
   end function mat2mat
 
-  ! Surcharge d'operateurs. La methode est toujours la
+  ! Surcharge d'opérateurs. La méthode est toujours la
   ! même mais avec différents types.
 
   ! matrice creuse + matrice creuse
@@ -44,7 +44,7 @@ contains
 
     implicit none
     type(element), dimension(:), intent(in) :: A,B
-    ! On peut considerer qu'une matrice creuse est de dimension infinie avec des 0
+    ! On peut considérer qu'une matrice creuse est de dimension infinie avec des 0
     ! partout
     integer, dimension(max(maxval(A%ind_l),maxval(B%ind_l)),max(maxval(A%ind_c),maxval(B%ind_c))) :: somme_ee
     integer :: i
@@ -60,7 +60,7 @@ contains
   end function somme_ee
 
   ! matrice creuse + matrice integer
-  ! La methode est pratiquement la même
+  ! La méthode est pratiquement la même
   function somme_ei (A,B)
     implicit none
     type(element), dimension(:), intent(in) :: A
@@ -108,7 +108,7 @@ contains
     prod_ei = 0
 
     ! On peut supposer qu'une matrice creuse est de
-    ! dimensions infinie (une infinitée de 0), d'où la
+    ! dimensions infinie (une infinités de 0), d'où la
     ! condition > et non /=
 
     if (maxval(A%ind_c) > size(B,1)) then
@@ -130,9 +130,9 @@ contains
 
   end function prod_ei
 
-  ! le produit n'est pas comutatif :-)
+  ! le produit n'est pas commutatif :-)
   ! Matrice integer * matrice creuse
-  ! Même methode en remplacant ligne par colonne
+  ! Même méthode en remplaçant ligne par colonne
   function prod_ie (B,A)
 
     implicit none

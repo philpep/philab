@@ -8,7 +8,7 @@ clean:
 mrproper:
 	@(cd $(SRC_DIR) && $(MAKE) $@)
 
-# Cette cible permet de générer une archive tarball compréssée
+# Cette cible permet de générer une archive tarball compressée
 pkg: mrproper
 	rm -f Makefile
 	tar cvzf ../philab-`date +%d%m%y`.tar.gz ../philab

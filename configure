@@ -2,7 +2,7 @@
 
 # Ce script shell n'a rien d'un vrai script 'configure'
 # Il se contente de trouver un compilateur fortran dans le $PATH
-# de verifier si tous les header C sont presents.
+# de vérifier si tous les header C sont présents.
 # et de générer le Makefile qui va bien
 
 # Le dossier avec tous les headers C

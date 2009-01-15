@@ -3,15 +3,15 @@
 /* Déclaration des fonctions */
 
 void init_env(void); /* Initialise l'environnement */
-char *getpwd(void); /* Retourne le repertoire courant */
+char *getpwd(void); /* Retourne le répertoire courant */
 char *get_prompt(void); /* Retourne le prompt */
 void builtin_cd(char *path); /* La commande cd */
-void external_cmd(char **argv); /* La commande d'execution */
+void external_cmd(char **argv); /* La commande d'exécution */
 
 /* La fonction d'analyse de la saisie */
 void make_cmd(char *str);
 /* Une petite macro utilisée dans make_cmd()
- * pour liberer la memoire */
+ * pour libérer la mémoire */
 #define FREE_ARGV() do { \
    i = 0; \
    while(argv[i] != NULL) \
@@ -21,7 +21,7 @@ void make_cmd(char *str);
 
 /* 
  * Taille maximale de la saisie si
- * _USE_READLINE n'est pas definit
+ * _USE_READLINE n'est pas définit
  */
 #define SIZE 512
 /* Taille maximale du nombre d'arguments */
@@ -44,11 +44,11 @@ typedef struct _matrix
 {
    char *name; /* Le nom (l'alias) */
    char *file; /* Le path du fichier */
-   struct _matrix *next; /* C'est une liste chainée */
+   struct _matrix *next; /* C'est une liste chaînée */
 
 } matrix;
 
-/* Strucure d'une commande philab */
+/* Structure d'une commande philab */
 typedef struct _builtin
 {
    char *name; /* Le nom de la commande */
@@ -67,7 +67,7 @@ void load(char *path); /* Charge une matrice */
 void unload(char *name); /* Décharge une matrice */
 void two_param(char *func, char *mat);
 void tree_param(char *func, char *mat1, char *mat2, char *outfile);
-/* Operateur +  * */
+/* Opérateur +  * */
 void operateur(char *mat1, char *mat2, char *op, char *outfile);
 /* La dernière fonction appelée si tout se passe normalement */
 void exit_func(char *str);

@@ -4,13 +4,13 @@ TODO list. Ça n'engage que la personne qui lis ce fichier :-)
  . Permettre de taper des choses dans ce genre : H = A + B
  . Plus de flexibilité dans la syntaxe : A+B>H.mat
  . Un parseur de saisie plus performant : X = gauss((A + B + C )*D, E)
- . Pouvoir executer des scripts philab : (mapper le fichier en memoire
-   puis executer ligne par ligne dans un nouveau processus.)
+ . Pouvoir exécuter des scripts philab : (mapper le fichier en mémoire
+   puis exécuter ligne par ligne dans un nouveau processus.)
  . Gestion des scalaires : 4*A
  . Gestion de plus de types.
  . Gestion des test if, then, else etc. Boucles.
- . Une interface en curses, avec plus d'information sur les matrices en memoire.
+ . Une interface en curses, avec plus d'information sur les matrices en mémoire.
  . Porter tout le programme en C :-)
- . Avoir un repertoire de config ~/.config/philab/ où sont stokées toutes
+ . Avoir un répertoire de config ~/.config/philab/ où sont stokées toutes
    les matrices de l'utilisateur.
 

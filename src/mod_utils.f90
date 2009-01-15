@@ -1,5 +1,5 @@
 ! Divers outils d'affichage
-! de matrices. Codes repetitifs
+! de matrices. Codes répétitifs
 module mod_utils
   use mod_mat_creuse
   implicit none
@@ -74,7 +74,7 @@ contains
   ! }}}
 
   ! Ces fonction permettent de lire une matrice
-  ! NE PAS OUBLIER DE LIBERER LA MEMOIRE
+  ! NE PAS OUBLIER DE LIBÉRER LA MÉMOIRE
   ! Pour le type matrice creuse
   ! {{{ readmat
   subroutine readmat_e (A,fichier)
@@ -132,7 +132,7 @@ contains
   open(unit=15, file=fichier)
   write(15,*) 'I'
   write(15,*) size(A,1), size(A,2)
-  ! On ecris lignes par lignes
+  ! On écris lignes par lignes
   do i=1,size(A,1)
      write(15,*) A(i,:)
   end do
