@@ -40,7 +40,7 @@ matrix *ll_matrix = NULL;
 
 /* 
  * init_env() : initialise les variables
- * d'environement
+ * d'environnements
  */
 void init_env(void)
 {
@@ -51,7 +51,7 @@ void init_env(void)
 
    uname(&host);
    /* On utilise assert car si setenv
-    * echoue le programme est inutilisable */
+    * échoue le programme est inutilisable */
 
    assert(setenv("HOME", user->pw_dir, 0) == 0);
    assert(setenv("HOST", host.nodename, 0) == 0);
@@ -72,7 +72,7 @@ void init_env(void)
 }
 
 /* 
- * Cette fonction renvoie le repertoire courant sous
+ * Cette fonction renvoie le répertoire courant sous
  * forme d'une chaine de caractère
  */
 char *getpwd(void)
@@ -92,13 +92,13 @@ char *getpwd(void)
 
 /* 
  * La commande cd, elle n'est pas comme les autres car elle
- * doit absolument être éxecutée dans le processus courant.
- * (Sinon c'est le processus fils qui changerais son repertoire
+ * doit absolument être exécutée dans le processus courant.
+ * (Sinon c'est le processus fils qui changerais son répertoire
  * courant...) 
  */
 void builtin_cd(char *path)
 {
-   /* On change tout simplement le repertoire courant */
+   /* On change tout simplement le répertoire courant */
    struct passwd *user;
    /* Si la commande a été lancée sans argument on va dans
     * le $HOME */
@@ -111,7 +111,7 @@ void builtin_cd(char *path)
       if(-1 == chdir(path))
 	 switch(errno)
 	 {
-	    /* On traite les erreurs possibles (Il en manque, mais c'est des cas extremes) */
+	    /* On traite les erreurs possibles (Il en manque, mais c'est des cas extrêmes) */
 	    case EACCES:
 	       fprintf(stderr, "Philab: %s permission non accordée\n", path);
 	       break;
@@ -130,14 +130,14 @@ void builtin_cd(char *path)
 	       fprintf(stderr, "Philab : %s n'est pas un dossier\n", path);
 	       break;
 	    default:
-	       fprintf(stderr, "Philab : Impossible de se deplacer vers %s\n", path);
+	       fprintf(stderr, "Philab : Impossible de se déplacer vers %s\n", path);
 	       break;
 	 }
    return;
 }
 
 /* 
- * get_prompt renvoie une chaine de caractère qui
+ * get_prompt renvoie une chaîne de caractère qui
  * contient le prompt
  */
 char *get_prompt(void)
@@ -146,7 +146,7 @@ char *get_prompt(void)
    char *pwd, *q, *prompt, *home, *host;
    home = getenv("HOME");
    host = getenv("HOST");
-   /* Si on ne peut avoir le repertoire courant on renvoie un prompt minimal */
+   /* Si on ne peut avoir le répertoire courant on renvoie un prompt minimal */
    if(NULL == (pwd = getpwd()))
    {
       prompt = malloc(sizeof(char) * 2);
@@ -156,7 +156,7 @@ char *get_prompt(void)
 
    q = malloc(sizeof(char) * 1+strlen(pwd));
    /* Cette partie remplace $HOME par ~ dans dans et met
-    * la nouvelle chaine obtenue dans q */
+    * la nouvelle chaîne obtenue dans q */
    if(!strncmp(pwd, home, strlen(home)))
    {
       strcpy(q, "~");
@@ -186,7 +186,7 @@ void external_cmd(char **argv)
 {
    /* 
     * Le processus est dupliqué fork()
-    * le nouveau processus execute la commande
+    * le nouveau processus exécute la commande
     * et le père (philab) attend la mort du processus
     * fils
     */
@@ -197,6 +197,7 @@ void external_cmd(char **argv)
    /* Fils */
    if(pid == 0)
    {
+      /* cf man 3 exec */
       if(argv[0][0] == '/')
 	 exit(execv(argv[0], argv));
       else
@@ -228,9 +229,9 @@ int main(void)
 #ifndef _USE_READLINE
    char *p, c;
 #endif
-   /* On initialise les variables d'environement */
+   /* On initialise les variables d'environnement */
    init_env();
-   /* On affiche le message de bienvennue */
+   /* On affiche le message de bienvenue */
    printf(" ____  _     _ _       _     \n");
    printf("|  _ \\| |__ (_) | __ _| |__  \n");
    printf("| |_) | '_ \\| | |/ _` | '_ \\ \n");
@@ -241,9 +242,9 @@ int main(void)
    for(;;)
    {
       prompt = get_prompt();
-      /* On recupère la saisie avec ou sans readline */
+      /* On récupère la saisie avec ou sans readline */
 #ifdef _USE_READLINE
-      /* TODO : readline permet de faire de la completion
+      /* TODO : readline permet de faire de la complétion
        * personnalisée, on pourrait l'utiliser mais je suis
        * trop feignant */
       saisie = readline(prompt);
@@ -263,8 +264,8 @@ int main(void)
 #endif /* _USE_READLINE */
 
       free(prompt);
-      /* make_cmd analyse la saisie et execute ce qu'il faut
-       * executer */
+      /* make_cmd analyse la saisie et exécute ce qu'il faut
+       * exécuter */
       make_cmd(saisie);
       free(saisie);
    }
@@ -289,7 +290,7 @@ void make_cmd(char *str)
    {
       *p = '\0';
       p++;
-      /* On supprime les espace du debut */
+      /* On supprime les espace du début */
       while(*p == ' ')
 	 *(p++) = '\0';
       outfile = p;
@@ -309,23 +310,27 @@ void make_cmd(char *str)
       p = strtok(NULL, " ");
    }
 
+   /* On fixe tous les arguments restant de argv à NULL */
    while(i < MAX_ARG)
       argv[i++] = NULL;
 
+   /* Si la commande est vide */
    if(argv[0] == NULL)
       return;
 
+   /* parfois il faut quitter philab */
    if(!strcmp(argv[0], "exit") || !strcmp(argv[0], "quit"))
    {
       FREE_ARGV();
       return exit_func(str);
    }
+
    /* On teste les commandes philab */
    while(p_builtin->name != NULL)
    {
       if(!strcmp(p_builtin->name, argv[0]))
       {
-	 /* On execute f ou f2 */
+	 /* On exécute f ou f2 ou f3 */
 	 if(p_builtin->f != NULL)
 	    p_builtin->f(argv[1]);
 	 else if(p_builtin->f2 != NULL)
@@ -376,10 +381,12 @@ void make_cmd(char *str)
    return;
 }
 
-/* Affiche l'aide en couleurs avec des belles intentations */
+/* Affiche l'aide en couleurs avec des belles indentations */
 void help(char *p)
 {
    const builtin *p_builtin = builtin_cmd;
+
+   /* Pour afficher toutes les commandes */
    if(p == NULL)
    {
       while(p_builtin->name != NULL)
@@ -391,6 +398,8 @@ void help(char *p)
       }
       return;
    }
+   
+   /* Pour afficher seulement l'aide pour une commande */
    while(p_builtin->name != NULL)
    {
       if(!strcmp(p, p_builtin->name))
@@ -400,11 +409,13 @@ void help(char *p)
       }
       p_builtin++;
    }
+
+   /* Si on arrive ici c'est qu'on a pas trouvé la commande */
    printf("Error : \"%s\" is not a valid philab command\n", p);
    return;
 }
 
-/* Permet de charger en memoire une matrice dans la liste chainée des matrices */
+/* Permet de charger en mémoire une matrice dans la liste chaînée des matrices */
 void load(char *path)
 {
    matrix *new, *p_ll = ll_matrix;
@@ -413,7 +424,7 @@ void load(char *path)
    if(NULL == path)
       return help("load");
 
-   /* Affiche la liste des matrices chargées en memoire */
+   /* Affiche la liste des matrices chargées en mémoire */
    if(!strcmp(path, "-l"))
    {
       new = ll_matrix;
@@ -437,7 +448,7 @@ void load(char *path)
 
    /* 
     * On veut tester si le fichier à la bonne extension
-    * à la fin de cette operation p pointera sur le debut du
+    * à la fin de cette opération p pointera sur le début du
     * nom du fichier 
     */
    if(NULL != (p = strrchr(path, '/')))
@@ -452,7 +463,7 @@ void load(char *path)
       return;
    }
 
-   /* On ajoute le nouvel ellement dans la liste chainée */
+   /* On ajoute le nouvel élément dans la liste chaînée */
    new = malloc(sizeof(matrix));
    new->name = malloc(sizeof(char) * (q-p));
    strncpy(new->name, p, q-p);
@@ -463,7 +474,7 @@ void load(char *path)
    {
       if(!strcmp(p_ll->name, new->name))
       {
-	 /* Cas de la matrice de sortie par defaut :
+	 /* Cas de la matrice de sortie par défaut :
 	  * on ne la recharge pas */
 	 if(!strcmp(p_ll->name, "ans"))
 	    return two_param(PRINT, "ans");
@@ -477,8 +488,8 @@ void load(char *path)
 
    /* 
     * On veut mettre le path absolu du fichier dans
-    * new->file pour ne pas être dépendant du repertoire
-    * courrant dans lequel on est...
+    * new->file pour ne pas être dépendant du répertoire
+    * courant dans lequel on est...
     */
    if(path[0] == '/')
    {
@@ -492,7 +503,7 @@ void load(char *path)
       strcat(new->file, "/");
       strcat(new->file, path);
    }
-   /* On lie le nouvel ellement dans la liste chainée */
+   /* On lie le nouvel élément dans la liste chaînée */
    new->next = ll_matrix;
    ll_matrix = new;
    /* On affiche la matrice chargée */
@@ -501,7 +512,7 @@ void load(char *path)
    return;
 }
 
-/* Permet de décharger une matrice de la memoire */
+/* Permet de décharger une matrice de la mémoire */
 void unload(char *name)
 {
    matrix *mat, *prev;
@@ -512,8 +523,8 @@ void unload(char *name)
    mat = ll_matrix;
    prev = ll_matrix;
 
-   /* Code classique pour la suppression d'un element dans
-    * une liste simplement chainée */
+   /* Code classique pour la suppression d'un élément dans
+    * une liste simplement chaînée */
    while(mat != NULL)
    {
       if(!strcmp(mat->name, name))
@@ -537,9 +548,13 @@ void unload(char *name)
 }
 
 
-/* calcul d'une operation + ou * */
+/* calcul d'une opération + ou * */
 void operateur(char *mat1, char *mat2, char *op, char *outfile)
 {
+
+   /* Distingue simplement le + du *
+    * TODO :  pourquoi ne pas y ajouter gauss avec
+    * une syntaxe matlab : A \ b */
    if(!strcmp(op, "+"))
       return tree_param(SUM, mat1, mat2, outfile);
    else if(!strcmp(op, "*"))
@@ -549,14 +564,16 @@ void operateur(char *mat1, char *mat2, char *op, char *outfile)
    return;
 }
 
-/* La fonction d'execution à deux paramêtres */
+/* La fonction d'exécution à deux paramètres */
 void two_param(char *func, char *mat)
 {
    char *cmd[5] = {getenv("RUNTIME_PATH"), func, search_matrix(mat), NULL};
 
+   /* Si l'argument est NULL on renvoie l'aide */
    if(NULL == mat)
       return help(func);
 
+   /* Sinon on exécute la bonne fonction */
    if(cmd[2] != NULL)
       return external_cmd(cmd);
    fprintf(stderr, "Philab: %s n'est pas un nom de matrice chargée, voyez help load\n", mat);
@@ -564,11 +581,12 @@ void two_param(char *func, char *mat)
 }
 
 
-/* La fonction d'execution à trois paramêtres */
+/* La fonction d'exécution à trois paramètres */
 void tree_param(char *func, char *mat1, char *mat2, char *outfile)
 {
    char *cmd[7] = {getenv("RUNTIME_PATH"), func, search_matrix(mat1), search_matrix(mat2), outfile, NULL};
 
+   /* Si l'argument est NULL on renvoie l'aide */
    if(NULL == mat1 || NULL == mat2)
       return help(func);
 
@@ -581,7 +599,7 @@ void tree_param(char *func, char *mat1, char *mat2, char *outfile)
    {
       external_cmd(cmd);
 
-      /* Si les matrices ont été exportés on les charge en memoire
+      /* Si les matrices ont été exportés on les charge en mémoire
        * (ce qui va permettre de les afficher entres autres) */
       if(!strcmp(func, SUM) || !strcmp(func, PROD))
       {
@@ -605,8 +623,8 @@ char *search_matrix(char *name)
    if(name == NULL)
       return NULL;
 
-   /* On boucle sur la liste chainée
-    * jusqu'a trouver la matrice */
+   /* On boucle sur la liste chaînée
+    * jusqu'à trouver la matrice */
    while(p_ll != NULL)
    {
       if(!strcmp(p_ll->name, name))
@@ -618,13 +636,18 @@ char *search_matrix(char *name)
 }
 
 /* La fonction qui quitte philab
- * elle recupère la dernière saisie pour
- * la liberer et elle libère toute la liste
- * chainée */
+ * elle récupère la dernière saisie pour
+ * la libérer et elle libère toute la liste
+ * chaînée */
 void exit_func(char *str)
 {
    matrix *p_ll = ll_matrix, *next;
+
+   /* On libère la saisie */
+
    free(str);
+   /* On parcoure la liste chaînée en libérant
+    * chaque élément */
    while(p_ll != NULL)
    {
       free(p_ll->name);
@@ -633,6 +656,8 @@ void exit_func(char *str)
       free(p_ll);
       p_ll = next;
    }
+
+   /* On quitte le programme */
    exit(0);
    return;
 }
