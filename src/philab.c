@@ -28,7 +28,7 @@ const builtin builtin_cmd[] = {
    {"*", "Affiche le produit matriciel de deux matrices", "A * B (with spaces please)", NULL, NULL, NULL},
    {NORME, "Affiche la norme d'une matrice", NORME" [1|inf|fro] A", NULL, NULL, tree_param},
    {GAUSS, "Resoudre un système du type Ax = b", GAUSS" A b", NULL, NULL, tree_param},
-   {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'a l'ordre 10000", NULL, NULL, tree_param},
+   {PW_ITER, "Trouver la plus grande valeur propre en module d'une matrice par la methode de la puissance itérée", PW_ITER" U v, où U est la matrice et v le premier vecteur (Le programme va jusqu'à une approximation de 0.001", NULL, NULL, tree_param},
    {"exit", "Quitte le programme", "exit", NULL, NULL, NULL},
    {NULL, NULL, NULL, NULL, NULL, NULL}
 };

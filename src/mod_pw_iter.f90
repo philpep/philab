@@ -30,7 +30,6 @@ contains
              y = x
              x = matmul(A,x)/maxval(abs(matmul(A,x)))
              eps = maxval(abs(x-y))
-             print*,'eps =', eps
           end do
           pw_iter = maxval(abs(matmul(A,x)))
        end if
