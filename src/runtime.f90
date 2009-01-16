@@ -201,13 +201,13 @@ program runtime
      end if
   case('pw_iter')
      if(T(1) == 'C' .and. T(2) == 'C') then
-        print*,norme_inf(pw_iter(mat2mat(A),mat2mat(B)))
+        print*,(pw_iter(mat2mat(A),mat2mat(B)))
      elseif (T(1) == 'C' .and. T(2) == 'I') then
-        print*,norme_inf(pw_iter(mat2mat(A),D))
+        print*,(pw_iter(mat2mat(A),D))
      elseif (T(1) == 'I' .and. T(2) == 'C') then
-        print*,norme_inf(pw_iter(C,mat2mat(B)))
+        print*,(pw_iter(C,mat2mat(B)))
      elseif (T(1) == 'I' .and. T(2) == 'I') then
-        print*,norme_inf(pw_iter(C,D))
+        print*,(pw_iter(C,D))
      else ! On est jamais trop prudent :)
         print*,'Il y a eu une erreur lors de la lecture de la matrice...'
      end if

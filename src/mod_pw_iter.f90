@@ -10,20 +10,21 @@ contains
     implicit none
     integer, dimension(:,:), intent(in) :: A
     integer, dimension(:,:), intent(in) :: u
-    integer, dimension(size(A,1),size(u,2)) :: pw_iter
-    integer :: i, n = 10000
+    real, dimension(size(u,1)) :: x,y
+    real :: pw_iter
+    real :: eps = 1
     ! On va jusqu'à l'ordre 10000 ce qui est largement suffisant
 
     if(size(u,2) /= 1 .or. size(A,1) /= size(A,2)) then
        write(0,*) 'Matrices non conformes'
     else
-
-       pw_iter = u/maxval(u(:,1))
-
-       do i = 1,n
-          pw_iter = matmul(A,pw_iter)
-          pw_iter = pw_iter/maxval(pw_iter(:,1))
+       x  = u(:,1)
+       do while(eps > 0.0001)
+          y = x
+          x = matmul(A,x)/maxval(abs(matmul(A,x)))
+          eps = maxval(abs(x-y))
        end do
+       pw_iter = maxval(abs(matmul(A,x)))
 
     end if
   end function pw_iter

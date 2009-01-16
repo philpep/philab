@@ -100,6 +100,8 @@ void builtin_cd(char *path)
 {
    /* On change tout simplement le répertoire courant */
    struct passwd *user;
+
+
    /* Si la commande a été lancée sans argument on va dans
     * le $HOME */
    if(path == NULL)
@@ -107,6 +109,8 @@ void builtin_cd(char *path)
       user = getpwuid(getuid());
       chdir(user->pw_dir);
    }
+
+   /* Sinon on va dans path et on fait les tests d'érreurs */
    else
       if(-1 == chdir(path))
 	 switch(errno)
@@ -165,7 +169,7 @@ char *get_prompt(void)
    else
       strcpy(q, pwd);
 
-   /* On écrit le prompt */
+   /* On écrit le prompt avec des jolies couleurs */
    prompt = malloc(sizeof(char) * 50+strlen(q)+strlen(host));
    strcpy(prompt, "[\033[31mphilab\033[37m@\033[36m");
    strcat(prompt, host);
@@ -253,6 +257,8 @@ int main(void)
 #else
       printf(prompt);
       saisie = malloc(sizeof(char) * SIZE);
+
+      /* On lis SIZE caractères dans stdin que l'on met dans saisie */
       fgets(saisie, SIZE, stdin);
 
       /* On supprime le '\n' de la fin */
