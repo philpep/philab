@@ -2,8 +2,15 @@ TODO list. Ça n'engage que la personne qui lis ce fichier :-)
 
  . Corriger tous les bugs
  . Permettre de taper des choses dans ce genre : H = A + B
- . Plus de flexibilité dans la syntaxe : A+B>H.mat
  . Un parseur de saisie plus performant : X = gauss((A + B + C )*D, E)
+ . Une idée pour rendre la récupération des matrices dans des fichiers aux choix de l'utilisateur.
+     if(outfile /= '') then
+	open(unit=15, file='/dev/stdout')
+     else
+	open(unit=15, file=outfile)
+     endif
+     Et là on pourait faire des write(15,*) et suivant les cas ça écris là où on veut \o/
+     (On pourrais aussi le faire dans l'interface C pour coder la redirection dans un fichier)
  . Pouvoir exécuter des scripts philab : (mapper le fichier en mémoire
    puis exécuter ligne par ligne dans un nouveau processus.)
  . Gestion des scalaires : 4*A
