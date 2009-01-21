@@ -4,7 +4,6 @@
    load b.mat --> segfault
 
 Je pense que l'appel de la fonction unload() dans la fonction load() y est pour quelque chose, le pointeur de la structure est changé...
-  EDIT : Ce bug c'est fixé par lui même tout seul \o/
   EDIT2 : Ce bug existe toujours, mais il est assez aléatoire :(
 
  #2 * Dans les matrices creuses il est permis de mettre plusieurs valeurs avec les mêmes indices lignes et colonnes
