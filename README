@@ -13,9 +13,9 @@
 #
 # J'ai codé philab en utilisant le gestionnaire de
 # version git. Pour voir les différentes étapes du
-# code, il y a un gitweb ici : http://git.philpep.ath.cx/philab.git
+# code, il y a un gitweb ici : http://git.philpep.org/philab.git
 # Pour récupérer la dernière version de philab :
-# git clone git://philpep.ath.cx/philab.git
+# git clone git://git.philpep.org/philab.git
 #
 # Pour m'envoyer un patch commitez vos changements :
 # git commit -a -m "Votre message de commit"
@@ -25,12 +25,12 @@
 #
 # Attention, le serveur est hébergé (pour le moment) sur mon petit
 # portable qui n'est pas allumé 24h/24 :-) , donc il
-# est possible que philpep.ath.cx soit parfois down.
+# est possible que philpep.org soit parfois down.
 #
 # Contact : Philippe Pepiot <philux@tuxfamily.org>
 # 			    <philippe.pepiot@gmail.com>
 # 			    <mapi13@cict.fr>
-# (Je n'ai pas encore installé mon serveur de mail :-)
+# 			    <root@philpep.org>
 #
 # Toute partie du code peut être librement modifiée et
 # redistribuée suivant les termes de la licence BSD que voici :

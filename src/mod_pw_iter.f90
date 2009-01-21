@@ -13,6 +13,8 @@ contains
     real, dimension(size(u,1)) :: x,y
     real :: pw_iter
     real :: eps = 1
+    ! Le nombre d'iterations (mx = 10000)
+    integer :: iter = 1
 
     pw_iter = 0.
 
@@ -30,6 +32,11 @@ contains
              y = x
              x = matmul(A,x)/maxval(abs(matmul(A,x)))
              eps = maxval(abs(x-y))
+             iter = iter + 1
+             if(iter == 10000) then
+                write(0,*) "nombre maximal d'iterations atteind , break"
+                exit
+             end if
           end do
           pw_iter = maxval(abs(matmul(A,x)))
        end if
